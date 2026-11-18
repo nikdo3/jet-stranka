@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
 import {
+    VLTAVA_LINE,
     filterPidStationsByModes,
     getVltavaBankPolygon,
 } from "../src/maps/pid";
@@ -65,6 +66,46 @@ describe("PID Prague data & helpers", () => {
         expect(turf.booleanPointInPolygon(zizkov, westPoly)).toBe(false);
         expect(turf.booleanPointInPolygon(zizkov, eastPoly)).toBe(true);
         expect(turf.booleanPointInPolygon(smichov, eastPoly)).toBe(false);
+    });
+
+    it("accurately classifies key Prague landmarks on West vs East bank of Vltava with 112-point centerline", () => {
+        expect(VLTAVA_LINE.geometry.coordinates).toHaveLength(112);
+
+        const westLandmarks: [string, [number, number]][] = [
+            ["Anděl", [14.4038, 50.07]],
+            ["Malostranská", [14.4092, 50.0908]],
+            ["Vltavská / Holešovice meander", [14.4384, 50.0994]],
+            ["Nádraží Holešovice", [14.4397, 50.1088]],
+            ["Smíchov", [14.4085, 50.056]],
+            ["Lahovice", [14.391, 49.992]],
+            ["Sedlec", [14.391, 50.133]],
+        ];
+
+        const eastLandmarks: [string, [number, number]][] = [
+            ["Staroměstská", [14.4176, 50.0883]],
+            ["Karlín", [14.4516, 50.0933]],
+            ["Palmovka", [14.475, 50.1038]],
+            ["Troja / Zoo", [14.4055, 50.1165]],
+            ["Podolí / Vyšehrad", [14.4168, 50.0604]],
+            ["Modřany", [14.403, 50.007]],
+        ];
+
+        const westPoly = getVltavaBankPolygon(14.4038, 50.07);
+        const eastPoly = getVltavaBankPolygon(14.4176, 50.0883);
+
+        for (const [name, [lng, lat]] of westLandmarks) {
+            const pt = turf.point([lng, lat]);
+            expect(turf.booleanPointInPolygon(pt, westPoly), `${name} should be on west bank`).toBe(true);
+            expect(turf.booleanPointInPolygon(pt, eastPoly), `${name} should NOT be on east bank`).toBe(false);
+            expect(getVltavaBankPolygon(lng, lat)).toBe(westPoly);
+        }
+
+        for (const [name, [lng, lat]] of eastLandmarks) {
+            const pt = turf.point([lng, lat]);
+            expect(turf.booleanPointInPolygon(pt, eastPoly), `${name} should be on east bank`).toBe(true);
+            expect(turf.booleanPointInPolygon(pt, westPoly), `${name} should NOT be on west bank`).toBe(false);
+            expect(getVltavaBankPolygon(lng, lat)).toBe(eastPoly);
+        }
     });
 
     it("preserves PID station metadata in parseCustomStationsFromText", () => {

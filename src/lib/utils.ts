@@ -6,6 +6,7 @@ import {
     PASTEBIN_API_RAW_URL,
     PASTEBIN_API_RAW_URL_PROXIED,
 } from "@/maps/api/constants";
+import { PRAGUE_MAP_GEO_LOCATION } from "@/maps/pid";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -18,7 +19,7 @@ export const mapToObj = <T, K extends string, V>(
 
 export const compress = async (
     str: string,
-    encoding = "deflate" as CompressionFormat,
+    encoding: CompressionFormat = "deflate",
 ): Promise<string> => {
     const byteArray = new TextEncoder().encode(str);
     const cs = new CompressionStream(encoding);
@@ -40,7 +41,7 @@ export const compress = async (
 
 export const decompress = async (
     base64String: string,
-    encoding = "deflate" as CompressionFormat,
+    encoding: CompressionFormat = "deflate",
 ): Promise<string> => {
     const regularBase64 = base64String.replace(/-/g, "+").replace(/_/g, "/");
     const paddedBase64 =
@@ -187,4 +188,216 @@ export async function shareOrFallback(
             // Try again with clipboard
             return shareOrFallback(url, true);
         });
+}
+
+const PID_DEFAULT_HIDING_ZONE_OPTIONS = [
+    "[railway=station]",
+    "[railway=halt]",
+    "[railway=tram_stop]",
+    "[highway=bus_stop]",
+];
+const PID_ALL_MODES = ["metro", "tram", "bus", "rail", "ferry"];
+const PID_DEFAULT_OVERLAY_LAYERS = ["zones", "metro_tram", "stops"];
+
+const generateUUID = (): string => {
+    if (
+        typeof crypto !== "undefined" &&
+        typeof (crypto as any).randomUUID === "function"
+    ) {
+        return (crypto as any).randomUUID();
+    }
+    return String(Math.random());
+};
+
+export async function encodeShortSharePayload(
+    zone: any,
+    pidStopModes?: string[],
+    pidOverlayLayers?: string[],
+): Promise<string> {
+    const isPrague =
+        zone?.properties?.osm_id === 435514 &&
+        zone?.properties?.isHidingZone === true;
+
+    if (!isPrague) {
+        const compacted = compactHidingZoneForShare(
+            zone,
+            pidStopModes,
+            pidOverlayLayers,
+        );
+        const payload = {
+            v: 2,
+            z: compacted,
+        };
+        return compress(JSON.stringify(payload), "deflate-raw");
+    }
+
+    const payload: any = { v: 2, p: 1 };
+
+    if (zone.hidingRadius !== undefined && zone.hidingRadius !== 0.5) {
+        payload.r = zone.hidingRadius;
+    }
+    if (
+        zone.hidingRadiusUnits &&
+        zone.hidingRadiusUnits !== "kilometers"
+    ) {
+        payload.u = zone.hidingRadiusUnits;
+    }
+    if (
+        zone.useCustomStations !== undefined &&
+        zone.useCustomStations !== true
+    ) {
+        payload.ucs = zone.useCustomStations;
+    }
+    if (zone.includeDefaultStations === true) {
+        payload.ids = true;
+    }
+
+    if (
+        Array.isArray(zone.zoneOptions) &&
+        (zone.zoneOptions.length !== PID_DEFAULT_HIDING_ZONE_OPTIONS.length ||
+            !PID_DEFAULT_HIDING_ZONE_OPTIONS.every(
+                (o, i) =>
+                    zone.zoneOptions[i] === o || zone.zoneOptions.includes(o),
+            ))
+    ) {
+        payload.zo = zone.zoneOptions;
+    }
+
+    const modes = pidStopModes ?? zone.pidStopModes;
+    if (
+        Array.isArray(modes) &&
+        (modes.length !== 5 ||
+            !PID_ALL_MODES.every((m) => modes.includes(m as any)))
+    ) {
+        payload.m = modes;
+    }
+
+    const layers = pidOverlayLayers ?? zone.pidOverlayLayers;
+    if (
+        Array.isArray(layers) &&
+        (layers.length !== 3 ||
+            !PID_DEFAULT_OVERLAY_LAYERS.every((l) => layers.includes(l)))
+    ) {
+        payload.o = layers;
+    }
+
+    if (
+        Array.isArray(zone.disabledStations) &&
+        zone.disabledStations.length > 0
+    ) {
+        payload.d = zone.disabledStations;
+    }
+
+    const rawPresets = zone.presets ?? zone.properties?.presets;
+    if (Array.isArray(rawPresets) && rawPresets.length > 0) {
+        payload.presets = rawPresets;
+    }
+
+    if (
+        Array.isArray(zone.alternateLocations) &&
+        zone.alternateLocations.length > 0
+    ) {
+        payload.alternateLocations = zone.alternateLocations;
+    }
+
+    const rawQuestions = zone.questions ?? zone.properties?.questions;
+    if (Array.isArray(rawQuestions) && rawQuestions.length > 0) {
+        const compactedQuestions = rawQuestions.map((item: any) => {
+            const q: any = {};
+            const type =
+                item.type ??
+                ([
+                    "radius",
+                    "radar",
+                    "thermometer",
+                    "tentacles",
+                    "measuring",
+                    "matching",
+                ].includes(item.id)
+                    ? item.id
+                    : undefined);
+            if (type) {
+                q.type = type;
+            }
+            if (item.text) {
+                q.text = item.text;
+            }
+            if (item.data && typeof item.data === "object") {
+                const d: any = { ...item.data };
+                if (d.drag === false) delete d.drag;
+                if (d.collapsed === false) delete d.collapsed;
+                q.data = d;
+            }
+            return q;
+        });
+        payload.q = compactedQuestions;
+    }
+
+    return compress(JSON.stringify(payload), "deflate-raw");
+}
+
+export async function decodeShortSharePayload(
+    encoded: string,
+): Promise<any> {
+    let jsonStr: string;
+    try {
+        jsonStr = await decompress(encoded, "deflate-raw");
+    } catch {
+        jsonStr = await decompress(encoded, "deflate");
+    }
+    const payload = JSON.parse(jsonStr);
+
+    if (payload.p !== 1 && payload.v === 2 && payload.z) {
+        return payload.z;
+    }
+
+    if (payload.p !== 1 && !payload.z) {
+        return payload;
+    }
+
+    // Reconstruct Prague preset
+    const decodedQuestions = (payload.q ?? []).map((item: any) => {
+        const id = generateUUID();
+        const d = item.data ? { ...item.data } : {};
+        if (d.drag === undefined) d.drag = false;
+        if (d.collapsed === undefined) d.collapsed = false;
+
+        const res: any = {
+            id,
+            ...item,
+            data: d,
+        };
+        return res;
+    });
+
+    const reconstructed: any = {
+        ...structuredClone(PRAGUE_MAP_GEO_LOCATION),
+        osm_id: 435514,
+        properties: {
+            ...structuredClone(PRAGUE_MAP_GEO_LOCATION.properties),
+            osm_id: 435514,
+            isHidingZone: true,
+            questions: decodedQuestions,
+        },
+        isHidingZone: true,
+        questions: decodedQuestions,
+        pidPreset: true,
+        hidingRadius: payload.r ?? 0.5,
+        hidingRadiusUnits: payload.u ?? "kilometers",
+        useCustomStations: payload.ucs ?? true,
+        includeDefaultStations: payload.ids ?? false,
+        zoneOptions: payload.zo ?? [
+            "[railway=station]",
+            "[railway=halt]",
+            "[railway=tram_stop]",
+            "[highway=bus_stop]",
+        ],
+        disabledStations: payload.d ?? [],
+        pidStopModes: payload.m ?? ["metro", "tram", "bus", "rail", "ferry"],
+        pidOverlayLayers: payload.o ?? ["zones", "metro_tram", "stops"],
+        alternateLocations: payload.alternateLocations ?? [],
+        presets: payload.presets ?? [],
+    };
+
+    return reconstructed;
 }

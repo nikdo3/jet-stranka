@@ -52,7 +52,9 @@ import {
     cn,
     compactHidingZoneForShare,
     compress,
+    decodeShortSharePayload,
     decompress,
+    encodeShortSharePayload,
     fetchFromPastebin,
     shareOrFallback,
     uploadToPastebin,
@@ -76,6 +78,7 @@ import {
 } from "./ui/sidebar-l";
 import { UnitSelect } from "./UnitSelect";
 
+const SHORT_SHARE_URL_PARAM = "s";
 const HIDING_ZONE_URL_PARAM = "hz";
 const HIDING_ZONE_COMPRESSED_URL_PARAM = "hzc";
 const PASTEBIN_URL_PARAM = "pb";
@@ -122,6 +125,7 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
 
     useEffect(() => {
         const params = new URL(window.location.toString()).searchParams;
+        const shortShare = params.get(SHORT_SHARE_URL_PARAM);
         const hidingZoneOld = params.get(HIDING_ZONE_URL_PARAM);
         const hidingZoneCompressed = params.get(
             HIDING_ZONE_COMPRESSED_URL_PARAM,
@@ -129,7 +133,26 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
         const pastebinId = params.get(PASTEBIN_URL_PARAM);
         const fetchUrl = params.get(FETCH_URL_PARAM);
 
-        if (hidingZoneOld !== null) {
+        if (shortShare !== null) {
+            decodeShortSharePayload(shortShare)
+                .then((decoded) => {
+                    try {
+                        loadHidingZone(JSON.stringify(decoded));
+                        // Remove short share parameter after initial load
+                        window.history.replaceState(
+                            {},
+                            "",
+                            window.location.pathname,
+                        );
+                    } catch (e) {
+                        toast.error(`Invalid hiding zone settings: ${e}`);
+                    }
+                })
+                .catch((e) => {
+                    console.error("Failed to decode short share payload:", e);
+                    toast.error(`Failed to decode short share payload: ${e}`);
+                });
+        } else if (hidingZoneOld !== null) {
             // Legacy base64 encoding
             try {
                 loadHidingZone(atob(hidingZoneOld));
@@ -222,9 +245,34 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                 geojson.properties &&
                 geojson.properties.isHidingZone === true
             ) {
-                questions.set(
-                    questionsSchema.parse(geojson.properties.questions ?? []),
-                );
+                const rawQ = geojson.properties.questions ?? [];
+                try {
+                    const normalizedQ = rawQ.map((q: any) => {
+                        if (
+                            q &&
+                            q.type &&
+                            ![
+                                "radius",
+                                "thermometer",
+                                "tentacles",
+                                "measuring",
+                                "matching",
+                            ].includes(q.id)
+                        ) {
+                            const mappedId =
+                                q.type === "radar" ? "radius" : q.type;
+                            return {
+                                ...q,
+                                id: mappedId,
+                                key: q.key ?? Math.random(),
+                            };
+                        }
+                        return q;
+                    });
+                    questions.set(questionsSchema.parse(normalizedQ));
+                } catch {
+                    questions.set(rawQ as any);
+                }
                 mapGeoLocation.set(geojson);
                 mapGeoJSON.set(null);
                 polyGeoJSON.set(null);
@@ -236,7 +284,33 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                 }
             } else {
                 if (geojson.questions) {
-                    questions.set(questionsSchema.parse(geojson.questions));
+                    try {
+                        const normalizedQ = geojson.questions.map((q: any) => {
+                            if (
+                                q &&
+                                q.type &&
+                                ![
+                                    "radius",
+                                    "thermometer",
+                                    "tentacles",
+                                    "measuring",
+                                    "matching",
+                                ].includes(q.id)
+                            ) {
+                                const mappedId =
+                                    q.type === "radar" ? "radius" : q.type;
+                                return {
+                                    ...q,
+                                    id: mappedId,
+                                    key: q.key ?? Math.random(),
+                                };
+                            }
+                            return q;
+                        });
+                        questions.set(questionsSchema.parse(normalizedQ));
+                    } catch {
+                        questions.set(geojson.questions as any);
+                    }
                     delete geojson.questions;
 
                     mapGeoJSON.set(geojson);
@@ -416,23 +490,20 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
             <Button
                 className="shadow-md"
                 onClick={async () => {
-                    const zoneToShare = compactHidingZoneForShare(
-                        $hidingZone,
-                        pidStopModes.get(),
-                        pidOverlayLayers.get(),
-                    );
-                    const hidingZoneString = JSON.stringify(zoneToShare);
-                    let compressedData;
+                    const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                    let shareUrl: string;
                     try {
-                        compressedData = await compress(hidingZoneString);
+                        const shortPayload = await encodeShortSharePayload(
+                            $hidingZone,
+                            pidStopModes.get(),
+                            pidOverlayLayers.get(),
+                        );
+                        shareUrl = `${baseUrl}?${SHORT_SHARE_URL_PARAM}=${shortPayload}`;
                     } catch (error) {
-                        console.error("Compression failed:", error);
+                        console.error("Encoding short share failed:", error);
                         toast.error(`Failed to prepare data for sharing`);
                         return;
                     }
-
-                    const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                    let shareUrl = `${baseUrl}?${HIDING_ZONE_COMPRESSED_URL_PARAM}=${compressedData}`;
 
                     if ($alwaysUsePastebin || shareUrl.length > 16000) {
                         if ($pastebinApiKey) {
@@ -440,6 +511,13 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                 toast.info(
                                     "Data is being shared via Pastebin...",
                                 );
+                                const zoneToShare = compactHidingZoneForShare(
+                                    $hidingZone,
+                                    pidStopModes.get(),
+                                    pidOverlayLayers.get(),
+                                );
+                                const hidingZoneString =
+                                    JSON.stringify(zoneToShare);
                                 const pastebinUrl = await uploadToPastebin(
                                     $pastebinApiKey,
                                     hidingZoneString,
@@ -455,7 +533,7 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                 console.error("Pastebin upload failed:", error);
                                 if (shareUrl.length <= 32000) {
                                     toast.warning(
-                                        "Pastebin upload failed, falling back to direct link.",
+                                        "Pastebin upload failed due to CORS/API restrictions. Direct short link will be shared instead.",
                                     );
                                 } else {
                                     toast.warning(
@@ -642,9 +720,10 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                     placeholder="Enter your Pastebin API key"
                                 />
                                 <p className="text-xs text-gray-500">
-                                    Optional. If set, large game data will be
-                                    shared via Pastebin URL; otherwise it falls
-                                    back to a JSON file download. Create a key{" "}
+                                    Optional. Direct short links (?s=...) work
+                                    without Pastebin. Pastebin upload from
+                                    browser may fail due to CORS restrictions on
+                                    static hosting. Create a key{" "}
                                     <a
                                         href="https://pastebin.com/doc_api"
                                         target="_blank"
@@ -737,18 +816,26 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                     }}
                                 />
                             </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <label className="text-2xl font-semibold font-poppins">
-                                    Force Pastebin for sharing?
-                                </label>
-                                <Checkbox
-                                    checked={$alwaysUsePastebin}
-                                    onCheckedChange={() =>
-                                        alwaysUsePastebin.set(
-                                            !$alwaysUsePastebin,
-                                        )
-                                    }
-                                />
+                            <div className="flex flex-col items-center gap-1">
+                                <div className="flex flex-row items-center gap-2">
+                                    <label className="text-2xl font-semibold font-poppins">
+                                        Force Pastebin for sharing?
+                                    </label>
+                                    <Checkbox
+                                        checked={$alwaysUsePastebin}
+                                        onCheckedChange={() =>
+                                            alwaysUsePastebin.set(
+                                                !$alwaysUsePastebin,
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <p className="text-xs text-gray-500 text-center">
+                                    Direct short links (?s=...) work without
+                                    Pastebin. Pastebin upload from browser may
+                                    fail due to CORS restrictions on static
+                                    hosting.
+                                </p>
                             </div>
                             <div className="flex flex-row items-center gap-2">
                                 <label className="text-2xl font-semibold font-poppins">
