@@ -42,7 +42,7 @@ export const AddQuestionDialog = ({
         if (!map) return false;
         const center = map.getCenter();
         const destination = turf.destination([center.lng, center.lat], 5, 90, {
-            units: "miles",
+            units: "kilometers",
         });
 
         addQuestion({
@@ -71,7 +71,13 @@ export const AddQuestionDialog = ({
                       locationType: "custom",
                       places: [],
                   }
-                : { lat: center.lat, lng: center.lng },
+                : {
+                      lat: center.lat,
+                      lng: center.lng,
+                      locationType: "metro_station",
+                      radius: 2,
+                      unit: "kilometers",
+                  },
         });
         return true;
     };
@@ -89,7 +95,7 @@ export const AddQuestionDialog = ({
                       type: "custom-points",
                       geo: [],
                   }
-                : { lat: center.lat, lng: center.lng },
+                : { lat: center.lat, lng: center.lng, type: "pid-zone" },
         });
         return true;
     };
@@ -107,7 +113,7 @@ export const AddQuestionDialog = ({
                       type: "custom-measure",
                       geo: turf.featureCollection([]),
                   }
-                : { lat: center.lat, lng: center.lng },
+                : { lat: center.lat, lng: center.lng, type: "prague-border" },
         });
         return true;
     };

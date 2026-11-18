@@ -282,6 +282,8 @@ const SidebarTrigger = React.forwardRef<
     return (
         <button
             ref={ref}
+            type="button"
+            aria-label="Toggle hiding zones sidebar"
             data-sidebar="trigger"
             size="icon"
             className={cn(

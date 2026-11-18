@@ -293,6 +293,8 @@ const SidebarTrigger = React.forwardRef<
     return (
         <button
             ref={ref}
+            type="button"
+            aria-label="Toggle questions sidebar"
             data-sidebar="trigger"
             size="icon"
             className={cn(

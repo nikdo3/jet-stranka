@@ -172,7 +172,7 @@ const tentacleQuestionSpecificSchemaFifteen = baseTentacleQuestionSchema.extend(
 );
 
 const tentacleQuestionSpecificSchemaOne = baseTentacleQuestionSchema.extend({
-    locationType: tentacleLocationsOne,
+    locationType: tentacleLocationsOne.default("metro_station"),
     places: z.array(z.any()).optional(),
 });
 
@@ -201,8 +201,8 @@ const customTentacleQuestionSchema = baseTentacleQuestionSchema.extend({
 
 export const tentacleQuestionSchema = z.union([
     customTentacleQuestionSchema.describe(NO_GROUP),
-    tentacleQuestionSpecificSchemaFifteen.describe("15 km / 15 Miles"),
     tentacleQuestionSpecificSchemaOne.describe("2 km / 1 Mile (Medium Game)"),
+    tentacleQuestionSpecificSchemaFifteen.describe("15 km / 15 Miles"),
 ]);
 
 const baseMatchingQuestionSchema = ordinaryBaseQuestionSchema.extend({
@@ -259,7 +259,7 @@ const ordinaryMatchingQuestionSchema = baseMatchingQuestionSchema.extend({
                 .literal("vltava-bank")
                 .describe("Vltava River Bank (Left / Right)"),
         ])
-        .default("airport"),
+        .default("pid-zone"),
 });
 
 const zoneMatchingQuestionsSchema = baseMatchingQuestionSchema.extend({
@@ -394,7 +394,7 @@ const ordinaryMeasuringQuestionSchema = baseMeasuringQuestionSchema.extend({
                 .literal("vltava-river")
                 .describe("Vltava / Berounka River (Řeka Vltava)"),
         ])
-        .default("coastline"),
+        .default("prague-border"),
     cat: z
         .object({
             adminLevel: z.union([

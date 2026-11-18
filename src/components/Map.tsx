@@ -273,7 +273,7 @@ export const Map = ({ className }: { className?: string }) => {
                                 5,
                                 90,
                                 {
-                                    units: "miles",
+                                    units: "kilometers",
                                 },
                             );
 
@@ -296,6 +296,9 @@ export const Map = ({ className }: { className?: string }) => {
                                 data: {
                                     lat: e.latlng.lat,
                                     lng: e.latlng.lng,
+                                    locationType: "metro_station",
+                                    radius: 2,
+                                    unit: "kilometers",
                                 },
                             });
                         },
@@ -308,6 +311,7 @@ export const Map = ({ className }: { className?: string }) => {
                                 data: {
                                     lat: e.latlng.lat,
                                     lng: e.latlng.lng,
+                                    type: "pid-zone",
                                 },
                             });
                         },
@@ -320,6 +324,7 @@ export const Map = ({ className }: { className?: string }) => {
                                 data: {
                                     lat: e.latlng.lat,
                                     lng: e.latlng.lng,
+                                    type: "prague-border",
                                 },
                             });
                         },
