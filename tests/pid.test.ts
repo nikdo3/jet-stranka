@@ -8,6 +8,7 @@ import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
 import {
+    VLTAVA_ISLANDS,
     VLTAVA_LINE,
     filterPidStationsByModes,
     getVltavaBankPolygon,
@@ -106,6 +107,43 @@ describe("PID Prague data & helpers", () => {
             expect(turf.booleanPointInPolygon(pt, westPoly), `${name} should NOT be on west bank`).toBe(false);
             expect(getVltavaBankPolygon(lng, lat)).toBe(eastPoly);
         }
+    });
+
+    it("treats Prague Vltava islands as distinct independent sides and excludes them from banks", () => {
+        expect(VLTAVA_ISLANDS).toHaveLength(8);
+
+        // Štvanice [14.43843, 50.09552] returns Štvanice only
+        const stvanicePoly = getVltavaBankPolygon(14.43843, 50.09552);
+        expect(stvanicePoly.properties?.name).toBe("Štvanice");
+        expect(turf.booleanPointInPolygon(turf.point([14.43843, 50.09552]), stvanicePoly)).toBe(true);
+        // Excludes Karlín, Anděl, Císařský ostrov, Střelecký ostrov
+        expect(turf.booleanPointInPolygon(turf.point([14.4516, 50.0933]), stvanicePoly)).toBe(false);
+        expect(turf.booleanPointInPolygon(turf.point([14.4038, 50.07]), stvanicePoly)).toBe(false);
+        expect(turf.booleanPointInPolygon(turf.point([14.41012, 50.11396]), stvanicePoly)).toBe(false);
+        expect(turf.booleanPointInPolygon(turf.point([14.41008, 50.08108]), stvanicePoly)).toBe(false);
+
+        // Císařský ostrov [14.41012, 50.11396] returns Císařský ostrov only
+        const cisarskyPoly = getVltavaBankPolygon(14.41012, 50.11396);
+        expect(cisarskyPoly.properties?.name).toBe("Císařský ostrov");
+        expect(turf.booleanPointInPolygon(turf.point([14.41012, 50.11396]), cisarskyPoly)).toBe(true);
+        // Excludes Troja/Zoo and Sedlec
+        expect(turf.booleanPointInPolygon(turf.point([14.4055, 50.1165]), cisarskyPoly)).toBe(false);
+        expect(turf.booleanPointInPolygon(turf.point([14.391, 50.133]), cisarskyPoly)).toBe(false);
+
+        // West bank (Anděl) excludes Kampa, Dětský ostrov, Štvanice, Císařský ostrov
+        const westPoly = getVltavaBankPolygon(14.4038, 50.07);
+        expect(turf.booleanPointInPolygon(turf.point([14.4038, 50.07]), westPoly)).toBe(true);
+        expect(turf.booleanPointInPolygon(turf.point([14.40789, 50.08368]), westPoly)).toBe(false); // Kampa
+        expect(turf.booleanPointInPolygon(turf.point([14.40902, 50.07861]), westPoly)).toBe(false); // Dětský ostrov
+        expect(turf.booleanPointInPolygon(turf.point([14.43843, 50.09552]), westPoly)).toBe(false); // Štvanice
+        expect(turf.booleanPointInPolygon(turf.point([14.41012, 50.11396]), westPoly)).toBe(false); // Císařský ostrov
+
+        // East bank (Staroměstská) excludes Slovanský ostrov, Veslařský ostrov, Štvanice
+        const eastPoly = getVltavaBankPolygon(14.4176, 50.0883);
+        expect(turf.booleanPointInPolygon(turf.point([14.4176, 50.0883]), eastPoly)).toBe(true);
+        expect(turf.booleanPointInPolygon(turf.point([14.41291, 50.07849]), eastPoly)).toBe(false); // Slovanský ostrov
+        expect(turf.booleanPointInPolygon(turf.point([14.41602, 50.054]), eastPoly)).toBe(false); // Veslařský ostrov
+        expect(turf.booleanPointInPolygon(turf.point([14.43843, 50.09552]), eastPoly)).toBe(false); // Štvanice
     });
 
     it("preserves PID station metadata in parseCustomStationsFromText", () => {
