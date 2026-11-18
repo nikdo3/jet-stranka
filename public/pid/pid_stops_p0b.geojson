@@ -1,0 +1,1436 @@
+{
+  "type": "FeatureCollection",
+  "name": "PID_Praha_Zastavky_Metro_a_Tramvaje",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "node_id": "4", "name": "Arbesovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","12","15","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.404202,50.076248] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "12", "name": "Balabenka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8","12"] },
+      "geometry": { "type": "Point", "coordinates": [14.482387,50.104422] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "15", "name": "Baterie", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.369894,50.092445] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "19", "name": "Belárie", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.401881,50.013611] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "20", "name": "Královský letohrádek", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.404998,50.094227] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "25", "name": "Bertramka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.393291,50.072231] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "31", "name": "Bílá Hora", "zone": "P+B", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.323441,50.075744] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "32", "name": "Bílá labuť", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["3","5","7","8","23","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.435472,50.090168] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "40", "name": "Na Pískách", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.369692,50.098957] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "42", "name": "Botanická zahrada", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","6","18","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.419606,50.070499] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "45", "name": "Bruselská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["13"] },
+      "geometry": { "type": "Point", "coordinates": [14.433302,50.073132] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "46", "name": "Brusnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.391733,50.092976] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "47", "name": "Blatiny", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.303621,50.065704] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "49", "name": "Geologická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.387000,50.036499] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "50", "name": "Budějovická", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.448790,50.044410] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "52", "name": "Chodov", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.491029,50.031655] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "54", "name": "Bulovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.468149,50.116058] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "61", "name": "Ciolkovského", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.307127,50.087997] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "67", "name": "Čechovo náměstí", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.458314,50.068107] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "68", "name": "Čechův most", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["15","17"] },
+      "geometry": { "type": "Point", "coordinates": [14.416890,50.094048] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "70", "name": "Nové Strašnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["19"] },
+      "geometry": { "type": "Point", "coordinates": [14.510651,50.077885] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "71", "name": "Černý kůň", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.403732,50.023079] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "72", "name": "Lehovec", "zone": "P+0", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.547227,50.106884] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "73", "name": "Červený Vrch", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.353188,50.096905] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "75", "name": "Kolbenova", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","12"] },
+      "geometry": { "type": "Point", "coordinates": [14.516392,50.110383] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "76", "name": "Modřanská škola", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.403053,50.009224] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "78", "name": "Ládví", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.469576,50.126641] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "81", "name": "Dělnická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.449817,50.103657] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "83", "name": "Divadlo Na Fidlovačce", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","6","7","18","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.436284,50.064831] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "85", "name": "Divoká Šárka", "zone": "P+B", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.323610,50.092602] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "87", "name": "Dlouhá třída", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","8","15","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.427540,50.091671] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "100", "name": "Vltavská", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","1","23","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.438508,50.100229] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "103", "name": "Drinopol", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.370555,50.083897] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "106", "name": "Opatov", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.509190,50.027890] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "110", "name": "Dvorce", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.414384,50.047726] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "113", "name": "Hlušičkova", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.316410,50.064014] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "115", "name": "Nádraží Holešovice", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","1","6","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.440067,50.108983] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "118", "name": "Flora", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","7","11","13","15"] },
+      "geometry": { "type": "Point", "coordinates": [14.462677,50.078289] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "126", "name": "Nádraží Podbaba", "zone": "P+B", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["8","18"] },
+      "geometry": { "type": "Point", "coordinates": [14.394019,50.111753] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "130", "name": "Hadovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.375146,50.099422] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "134", "name": "Nádraží Libeň", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.501748,50.102074] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "135", "name": "Hloubětín", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","12"] },
+      "geometry": { "type": "Point", "coordinates": [14.536435,50.106688] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "138", "name": "Pražské Jezulátko", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12","15","20","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.404176,50.085659] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "139", "name": "Hercovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.451224,50.122074] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "140", "name": "Park Maxe van der Stoela", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["25"] },
+      "geometry": { "type": "Point", "coordinates": [14.385545,50.090679] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "142", "name": "Hlavní nádraží", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.434121,50.083505] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "144", "name": "Starý Hloubětín", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["8","12"] },
+      "geometry": { "type": "Point", "coordinates": [14.529545,50.104375] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "147", "name": "Hlubočepy", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.405602,50.043129] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "152", "name": "Horky", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.446633,50.061474] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "157", "name": "Bořislavka", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.362880,50.098380] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "163", "name": "Hradčanská", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","1","2","8","18","20","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.403194,50.097453] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "172", "name": "Viktoria Žižkov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","15","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.444494,50.085091] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "180", "name": "Chmelnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.486961,50.092556] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "183", "name": "Chodovská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.468380,50.056896] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "184", "name": "Škola Radlice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4"] },
+      "geometry": { "type": "Point", "coordinates": [14.393697,50.059745] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "187", "name": "Chotkovy sady", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","12","18","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.409131,50.094921] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "190", "name": "I. P. Pavlova", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.430310,50.074330] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "191", "name": "Italská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","13"] },
+      "geometry": { "type": "Point", "coordinates": [14.436517,50.078033] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "203", "name": "Jindřišská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","5","6","9","23","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.430158,50.085083] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "208", "name": "Jiráskovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","17"] },
+      "geometry": { "type": "Point", "coordinates": [14.414158,50.076252] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "209", "name": "Jiřího z Poděbrad", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","11","13"] },
+      "geometry": { "type": "Point", "coordinates": [14.450736,50.077723] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "221", "name": "Karlovy lázně", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","18"] },
+      "geometry": { "type": "Point", "coordinates": [14.413466,50.084572] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "228", "name": "Kačerov", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.459294,50.041844] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "231", "name": "Kamenická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","8","12","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.428855,50.099571] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "236", "name": "Slánská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.309402,50.064468] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "237", "name": "Karlovo náměstí", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","3","4","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.416980,50.074590] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "240", "name": "Kavalírka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.370670,50.070034] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "249", "name": "Ke Stírce", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","17","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.455868,50.122673] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "254", "name": "Klamovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.380618,50.070702] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "258", "name": "Lužiny", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.330481,50.044503] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "262", "name": "Korunovační", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","8","12","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.420175,50.099571] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "266", "name": "Kněžská luka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.492968,50.092186] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "269", "name": "Koh-i-noor", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","7","19","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.461409,50.067581] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "272", "name": "Divadlo pod Palmovkou", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.472753,50.105659] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "283", "name": "Nad Džbánem", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.336719,50.093945] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "286", "name": "Háje", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.527239,50.030834] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "289", "name": "Kotlářka", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["7","9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.363069,50.069599] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "299", "name": "Krematorium Strašnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.484720,50.077320] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "301", "name": "Krymská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.446995,50.071980] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "302", "name": "Křížová", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4"] },
+      "geometry": { "type": "Point", "coordinates": [14.404703,50.063278] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "303", "name": "Kublov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.418122,50.054398] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "306", "name": "Nemocnice Motol", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["A"] },
+      "geometry": { "type": "Point", "coordinates": [14.341322,50.075334] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "308", "name": "Divadlo Gong", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.488599,50.106792] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "314", "name": "Kyselova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["10"] },
+      "geometry": { "type": "Point", "coordinates": [14.463482,50.126194] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "319", "name": "Laurová", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4"] },
+      "geometry": { "type": "Point", "coordinates": [14.398015,50.061146] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "321", "name": "Dejvická", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","8","18","20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.393172,50.100481] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "324", "name": "Letenské náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","8","12","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.424091,50.099949] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "332", "name": "Střížkov", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.489502,50.126166] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "333", "name": "Líbeznická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.455528,50.128784] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "337", "name": "Lihovar", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","20","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.409692,50.050211] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "339", "name": "Lipanská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","15","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.453712,50.083916] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "348", "name": "Arena Libeň jih", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.493205,50.103043] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "354", "name": "Jana Masaryka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.440681,50.073513] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "360", "name": "Malostranská", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","2","12","15","18","20","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.409241,50.091675] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "361", "name": "Malostranské náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12","15","20","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.404328,50.087978] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "362", "name": "Malovanka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","23","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.382504,50.085594] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "364", "name": "Malý Břevnov", "zone": "P+B", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.331835,50.076000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "366", "name": "Marjánka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.375813,50.084549] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "373", "name": "Mezi Hřbitovy", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["26"] },
+      "geometry": { "type": "Point", "coordinates": [14.471742,50.081657] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "376", "name": "Michelská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.453829,50.055065] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "385", "name": "Pankrác", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.439710,50.050977] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "387", "name": "Pobřežní cesta", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.407448,50.034206] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "388", "name": "Nádraží Modřany", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.403307,50.004581] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "391", "name": "Vršovické náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.454220,50.069157] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "394", "name": "Motol", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.336522,50.067673] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "395", "name": "Krematorium Motol", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.326459,50.066227] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "400", "name": "Muzeum", "zone": "P", "category": "metro_transfer", "is_metro": true, "is_tram": false, "lines": ["A","C"] },
+      "geometry": { "type": "Point", "coordinates": [14.430857,50.080048] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "401", "name": "Myslíkova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5"] },
+      "geometry": { "type": "Point", "coordinates": [14.418502,50.078014] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "403", "name": "Na Groši", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.524025,50.052975] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "433", "name": "Na Veselí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["18"] },
+      "geometry": { "type": "Point", "coordinates": [14.441221,50.056240] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "439", "name": "Nábřeží Kapitána Jaroše", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","8","17","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.431299,50.096321] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "447", "name": "Nad Trojou", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.438882,50.120331] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "449", "name": "Nádraží Braník", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.405406,50.029251] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "453", "name": "Nádraží Hostivař", "zone": "P+0", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.536753,50.053130] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "458", "name": "Smíchovské nádraží", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","5","12","15","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.409114,50.061291] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "459", "name": "Staré Strašnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.492912,50.068249] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "462", "name": "Nádraží Veleslavín", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.348551,50.095955] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "463", "name": "Nádraží Vršovice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","7","11","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.447584,50.066113] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "464", "name": "Poliklinika Vysočany", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.494864,50.108974] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "467", "name": "Třebenická", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["10"] },
+      "geometry": { "type": "Point", "coordinates": [14.480905,50.129536] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "469", "name": "Nákladové nádraží Žižkov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["26"] },
+      "geometry": { "type": "Point", "coordinates": [14.470451,50.084324] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "471", "name": "Libeňský zámek", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.472166,50.108383] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "472", "name": "Hostivařská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.529498,50.052773] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "473", "name": "Kubánské náměstí", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["6","7","19","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.477126,50.070774] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "474", "name": "Vysočanská", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","12"] },
+      "geometry": { "type": "Point", "coordinates": [14.501262,50.110111] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "476", "name": "Náměstí Míru", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.439106,50.075304] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "480", "name": "Náměstí Republiky", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","6","8","15","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.430556,50.088804] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "481", "name": "Švandovo divadlo", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","12","15","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.404175,50.078484] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "482", "name": "Náměstí Bratří Synků", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["2","6","7","11","13","18","19","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.441215,50.064155] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "483", "name": "Národní divadlo", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","9","17","18","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.413327,50.081404] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "484", "name": "Vodičkova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","5","6","9","23","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.422736,50.079659] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "499", "name": "Nový Hloubětín", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.528187,50.109859] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "503", "name": "Nuselská radnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["18","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.442273,50.062855] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "504", "name": "Nuselské schody", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["13"] },
+      "geometry": { "type": "Point", "coordinates": [14.435133,50.068275] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "507", "name": "Petřiny", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["A"] },
+      "geometry": { "type": "Point", "coordinates": [14.345049,50.086585] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "508", "name": "Bohemians", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","7","11","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.454185,50.066204] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "509", "name": "Observatoř Libuš", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.446351,50.006733] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "510", "name": "Českomoravská", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.491763,50.106159] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "512", "name": "Ohrada", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.469230,50.090584] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "514", "name": "Okrouhlická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.460747,50.119587] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "515", "name": "Olšanské hřbitovy", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["7","11","13","15"] },
+      "geometry": { "type": "Point", "coordinates": [14.466456,50.078140] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "516", "name": "Olšanské náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","15","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.457467,50.082489] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "519", "name": "Ořechovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.379548,50.092838] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "521", "name": "Ortenovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.447080,50.107826] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "522", "name": "Ostrčilovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","6","7","18","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.425223,50.065056] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "527", "name": "Vyšehrad", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.430518,50.063171] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "529", "name": "Palmovka", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","3","8","9","10","11","12","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.474537,50.103897] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "530", "name": "Palouček", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["18","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.437600,50.061859] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "531", "name": "Pohořelec", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.387673,50.088739] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "532", "name": "Výstaviště", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["1","6","17","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.431912,50.104401] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "533", "name": "Libuš", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.455717,50.008973] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "539", "name": "Národní třída", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","2","9","18","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.420302,50.079944] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "541", "name": "Sídliště Petřiny", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.339774,50.086975] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "550", "name": "Plynárna Michle", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.464609,50.056549] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "553", "name": "Plzeňka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.408817,50.063702] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "554", "name": "Dědina", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.301905,50.089329] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "559", "name": "Pod Jezerkou", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.449987,50.058399] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "560", "name": "Pod Karlovem", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["13"] },
+      "geometry": { "type": "Point", "coordinates": [14.432679,50.069748] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "567", "name": "Hotel Golf", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.346667,50.068031] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "580", "name": "Poštovka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.354462,50.068569] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "583", "name": "Podolská vodárna", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.419362,50.059887] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "584", "name": "Dubečská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.501875,50.065495] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "586", "name": "Olšanská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["26"] },
+      "geometry": { "type": "Point", "coordinates": [14.464540,50.083424] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "592", "name": "Prašný most", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.395885,50.094841] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "593", "name": "Právnická fakulta", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.417862,50.091705] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "595", "name": "Holešovická tržnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.444301,50.098339] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "596", "name": "Obchodní centrum Hostivař", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.519171,50.053852] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "597", "name": "Pražského povstání", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","18","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.433360,50.056830] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "598", "name": "Pražský hrad", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.397963,50.093315] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "599", "name": "Na Hroudě", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.488700,50.070507] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "601", "name": "Roztyly", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.476747,50.037677] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "602", "name": "Nové Butovice", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.352185,50.050852] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "603", "name": "Prosek", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.498660,50.119200] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "605", "name": "Průběžná", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","19","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.485649,50.071434] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "610", "name": "Obora Hvězda", "zone": "P+B", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.341566,50.078270] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "612", "name": "Sídliště Řepy", "zone": "P+B", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.298904,50.065144] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "614", "name": "Přístaviště", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.409638,50.040314] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "616", "name": "Radhošťská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","13"] },
+      "geometry": { "type": "Point", "coordinates": [14.457279,50.077652] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "618", "name": "Radošovická", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.496132,50.066910] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "627", "name": "Ruská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","11","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.451129,50.071686] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "636", "name": "Říčanova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.353228,50.081383] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "645", "name": "Sibeliova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.384204,50.092781] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "651", "name": "Sídliště Ďáblice", "zone": "P+0", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["10"] },
+      "geometry": { "type": "Point", "coordinates": [14.479742,50.132751] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "652", "name": "Sídliště Hloubětín", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.542891,50.106552] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "655", "name": "Invalidovna", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","3","8","12","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.463499,50.096954] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "659", "name": "Sídliště Libuš", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.454284,50.006149] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "661", "name": "Sídliště Na Dědině", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.309918,50.089775] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "670", "name": "Sídliště Zahradní Město", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.512601,50.057289] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "675", "name": "Kobylisy", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["C","3","10","17","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.454250,50.124120] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "676", "name": "Střelničná", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["10"] },
+      "geometry": { "type": "Point", "coordinates": [14.458662,50.125774] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "680", "name": "Slavia - Nádraží Eden", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","7","19","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.470657,50.069553] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "685", "name": "Jinonice", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.369847,50.054209] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "689", "name": "Florenc", "zone": "P", "category": "metro_transfer", "is_metro": true, "is_tram": true, "lines": ["B","C","3","8","12","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.439428,50.090568] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "690", "name": "Solidarita", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["19"] },
+      "geometry": { "type": "Point", "coordinates": [14.493829,50.076889] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "691", "name": "Podkovářská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.513454,50.102951] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "692", "name": "Sparta", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","8","12","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.418600,50.099258] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "694", "name": "Spojovací", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["9","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.498599,50.091843] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "697", "name": "Spořilov", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.482206,50.050941] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "703", "name": "Staroměstská", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["A"] },
+      "geometry": { "type": "Point", "coordinates": [14.417670,50.088200] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "713", "name": "Strašnická", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","7","19","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.490458,50.073104] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "714", "name": "Strážní", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.481536,50.092316] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "717", "name": "Strossmayerovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","6","8","12","17","25","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.433240,50.098875] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "718", "name": "Březiněveská", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["3","17","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.457125,50.126026] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "724", "name": "Svatoplukova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","6","7","18","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.429458,50.065102] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "739", "name": "Štěpánská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","21","22"] },
+      "geometry": { "type": "Point", "coordinates": [14.422432,50.075687] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "740", "name": "Štěpničná", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["10"] },
+      "geometry": { "type": "Point", "coordinates": [14.477281,50.127975] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "751", "name": "Teplárna Michle", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.474371,50.053028] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "755", "name": "Nademlejnská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.524666,50.103851] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "757", "name": "Thákurova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.387046,50.100105] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "758", "name": "Křižíkova", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.451470,50.092575] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "765", "name": "Trojská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.433113,50.116394] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "775", "name": "U Elektry", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.518557,50.103462] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "778", "name": "U Kaštanu", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.363350,50.083626] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "779", "name": "U Kříže", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.475286,50.112141] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "805", "name": "U Zvonu", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.387218,50.071541] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "809", "name": "Újezd", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","12","15","20","22","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.404747,50.081165] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "816", "name": "Urxova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","8","12","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.456525,50.095222] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "818", "name": "Rajská zahrada", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.560488,50.106850] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "827", "name": "Limuzská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["19"] },
+      "geometry": { "type": "Point", "coordinates": [14.508965,50.077801] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "837", "name": "Vozovna Žižkov", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["5","9","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.474530,50.091526] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "841", "name": "Veletržní palác", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["6","17"] },
+      "geometry": { "type": "Point", "coordinates": [14.432813,50.102245] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "844", "name": "Větrník", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.351194,50.089752] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "848", "name": "Vozovna Strašnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","19","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.489584,50.075653] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "849", "name": "Vinohradské hřbitovy", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.479644,50.077793] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "850", "name": "Vinohradská tržnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["11","13"] },
+      "geometry": { "type": "Point", "coordinates": [14.442732,50.077023] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "854", "name": "Karlínské náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","8","12","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.445258,50.092720] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "858", "name": "Vojenská nemocnice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2"] },
+      "geometry": { "type": "Point", "coordinates": [14.360301,50.091736] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "861", "name": "Vosmíkových", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.473574,50.114388] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "864", "name": "Vozovna Kobylisy", "zone": "P+B", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["17","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.453547,50.132809] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "865", "name": "Vozovna Motol", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10"] },
+      "geometry": { "type": "Point", "coordinates": [14.341458,50.067856] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "866", "name": "Vozovna Pankrác", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["18"] },
+      "geometry": { "type": "Point", "coordinates": [14.437892,50.057072] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "867", "name": "Vozovna Střešovice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","2","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.389961,50.093895] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "868", "name": "Vozovna Vokovice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.330469,50.092926] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "870", "name": "Vychovatelna", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","10","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.464630,50.119045] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "872", "name": "Vypich", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.347570,50.079842] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "873", "name": "Poštovská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.509072,50.110622] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "876", "name": "Albertov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["2","6","7","18","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.421481,50.067280] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "878", "name": "Výtoň", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","7","17","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.415007,50.068123] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "889", "name": "Zahradní Město", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.505138,50.060780] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "897", "name": "Černý Most", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.576780,50.108930] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "900", "name": "Zborov - Strašnické divadlo", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["19"] },
+      "geometry": { "type": "Point", "coordinates": [14.500311,50.077312] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "901", "name": "Zborovská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4","5","7"] },
+      "geometry": { "type": "Point", "coordinates": [14.408092,50.072399] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "914", "name": "Zlíchov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.408097,50.046570] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "921", "name": "Želivského", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["A","7","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.475499,50.078286] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "929", "name": "Poliklinika Modřany", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.418749,50.004589] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "943", "name": "Sídliště Červený Vrch", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.359188,50.097980] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "945", "name": "Levského", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.436082,50.005123] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "946", "name": "Sídliště Modřany", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.432528,50.005230] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "947", "name": "Modřanská rokle", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.429029,50.006416] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "948", "name": "U Libušského potoka", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.423002,50.005550] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "952", "name": "Těšnov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","7","12","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.436683,50.090518] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "953", "name": "Skalka", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["A"] },
+      "geometry": { "type": "Point", "coordinates": [14.507860,50.068430] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "957", "name": "Radlická", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","4"] },
+      "geometry": { "type": "Point", "coordinates": [14.387815,50.058106] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "983", "name": "Štvanice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","23"] },
+      "geometry": { "type": "Point", "coordinates": [14.436933,50.095268] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "994", "name": "Břevnovský klášter", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.359010,50.083179] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "997", "name": "Lazarská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","5","6","9","23","24"] },
+      "geometry": { "type": "Point", "coordinates": [14.419922,50.079239] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1000", "name": "Letňany", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["C"] },
+      "geometry": { "type": "Point", "coordinates": [14.516175,50.124155] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1006", "name": "Čechova čtvrť", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.409697,50.002239] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1007", "name": "Luka", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.321366,50.045671] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1019", "name": "Sídliště Barrandov", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.368736,50.031467] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1030", "name": "Poliklinika Barrandov", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.374547,50.034050] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1040", "name": "Anděl", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": true, "lines": ["B","5","12","15","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.403809,50.070015] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1044", "name": "Braunova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["4"] },
+      "geometry": { "type": "Point", "coordinates": [14.402555,50.061909] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1046", "name": "Vlastina", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["20","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.317360,50.091305] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1049", "name": "Högerova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.380600,50.034550] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1050", "name": "Chaplinovo náměstí", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","12","15","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.377425,50.035297] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1052", "name": "Špitálská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.504627,50.111122] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1053", "name": "Vozovna Hloubětín", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["12"] },
+      "geometry": { "type": "Point", "coordinates": [14.528326,50.108097] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1071", "name": "Depo Hostivař", "zone": "P+0", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["A"] },
+      "geometry": { "type": "Point", "coordinates": [14.515182,50.075093] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1072", "name": "Můstek", "zone": "P", "category": "metro_transfer", "is_metro": true, "is_tram": false, "lines": ["A","B"] },
+      "geometry": { "type": "Point", "coordinates": [14.424189,50.083812] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1074", "name": "Krejcárek", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["9","10","11"] },
+      "geometry": { "type": "Point", "coordinates": [14.474965,50.095066] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1075", "name": "Ocelářská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.487830,50.103603] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1108", "name": "Vinice", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["7","19","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.489277,50.076692] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1122", "name": "U Průhonu", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["1","25"] },
+      "geometry": { "type": "Point", "coordinates": [14.450027,50.104923] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1140", "name": "Stodůlky", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.306276,50.046680] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1141", "name": "Zličín", "zone": "P+B", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.291140,50.053264] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1154", "name": "Hůrka", "zone": "P", "category": "metro_station", "is_metro": true, "is_tram": false, "lines": ["B"] },
+      "geometry": { "type": "Point", "coordinates": [14.342823,50.050021] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1401", "name": "Kabešova", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["8"] },
+      "geometry": { "type": "Point", "coordinates": [14.508314,50.102409] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2701", "name": "Náměstí Olgy Scheinpflugové", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.362091,50.030441] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2702", "name": "Holyně", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["5","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.358238,50.027184] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2708", "name": "Hasičská stanice Modřany", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["17"] },
+      "geometry": { "type": "Point", "coordinates": [14.439692,50.005943] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2711", "name": "Slivenec", "zone": "P+B", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["5","21"] },
+      "geometry": { "type": "Point", "coordinates": [14.351637,50.024053] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2731", "name": "Hodkovičky", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["3","17","20"] },
+      "geometry": { "type": "Point", "coordinates": [14.402551,50.018452] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2781", "name": "Nádraží Zahradní Město", "zone": "P+0", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["22","26"] },
+      "geometry": { "type": "Point", "coordinates": [14.504240,50.062298] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "2784", "name": "Kotorská", "zone": "P", "category": "tram_stop", "is_metro": false, "is_tram": true, "lines": ["18","19"] },
+      "geometry": { "type": "Point", "coordinates": [14.436738,50.054470] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "node_id": "1121", "name": "Zvonařka", "zone": "P", "category": "tram_terminal", "is_metro": false, "is_tram": true, "lines": ["13"] },
+      "geometry": { "type": "Point", "coordinates": [14.433045,50.070307] }
+    }
+  ]
+}

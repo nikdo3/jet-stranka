@@ -65,7 +65,14 @@ function parseGeoJSON(obj: any): CustomStation[] {
         const props: any = f.properties || {};
         const name = props["name:en"] || props.name || props.title;
         const id = props.id || props.osm_id || props["@id"] || `${lat},${lng}`;
-        stations.push({ id: String(id), name, lat, lng });
+        const station: CustomStation = { id: String(id), name, lat, lng };
+        if (Array.isArray(props.lines)) station.lines = props.lines;
+        if (typeof props.zone === "string") station.zone = props.zone;
+        if (typeof props.is_metro === "boolean")
+            station.is_metro = props.is_metro;
+        if (typeof props.is_tram === "boolean")
+            station.is_tram = props.is_tram;
+        stations.push(station);
     };
     if (obj.type === "FeatureCollection") {
         (obj as FeatureCollection).features.forEach((f) =>
@@ -151,10 +158,17 @@ export function normalizeToStationFeatures(
     stations: CustomStation[],
 ): FeatureCollection<Point, StationPlaceProperties> {
     // Return GeoJSON FeatureCollection of Points carrying properties { id, name }
-    const features: StationPlace[] = stations.map((s) => ({
-        type: "Feature",
-        geometry: { type: "Point", coordinates: [s.lng, s.lat] },
-        properties: { id: s.id, name: s.name },
-    }));
+    const features: StationPlace[] = stations.map((s) => {
+        const properties: StationPlaceProperties = { id: s.id, name: s.name };
+        if (s.lines !== undefined) properties.lines = s.lines;
+        if (s.zone !== undefined) properties.zone = s.zone;
+        if (s.is_metro !== undefined) properties.is_metro = s.is_metro;
+        if (s.is_tram !== undefined) properties.is_tram = s.is_tram;
+        return {
+            type: "Feature",
+            geometry: { type: "Point", coordinates: [s.lng, s.lat] },
+            properties,
+        };
+    });
     return { type: "FeatureCollection", features };
 }

@@ -22,6 +22,14 @@ export const determineCache = async (cacheType: CacheType) => {
     }
 };
 
+const fetchWithTimeout = (url: string) =>
+    fetch(
+        url,
+        url.startsWith("http")
+            ? { signal: AbortSignal.timeout(20000) }
+            : undefined,
+    );
+
 export const cacheFetch = async (
     url: string,
     loadingText?: string,
@@ -47,7 +55,7 @@ export const cacheFetch = async (
         }
 
         const fetchAndMaybeCache = async () => {
-            const response = await fetch(url);
+            const response = await fetchWithTimeout(url);
             if (response.ok) {
                 await cache.put(url, response.clone());
             } else {
@@ -73,7 +81,7 @@ export const cacheFetch = async (
     } catch (e) {
         console.log(e); // Probably a caches not supported error
 
-        return fetch(url);
+        return fetchWithTimeout(url);
     }
 };
 

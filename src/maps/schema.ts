@@ -112,7 +112,7 @@ const getDefaultUnit = () => {
 };
 
 const radiusQuestionSchema = ordinaryBaseQuestionSchema.extend({
-    radius: z.number().min(0, "You cannot have a negative radius").default(50),
+    radius: z.number().min(0, "You cannot have a negative radius").default(1),
     unit: unitsSchema.default(getDefaultUnit),
     within: z.boolean().default(true),
 });
@@ -123,11 +123,16 @@ const tentacleLocationsFifteen = z.union([
     z.literal("aquarium").describe("Aquariums"),
 ]);
 
-const tentacleLocationsOne = z.union([
+const tentacleLocationsOneOverpass = z.union([
     z.literal("museum").describe("Museums"),
     z.literal("hospital").describe("Hospitals"),
     z.literal("cinema").describe("Movie Theaters"),
     z.literal("library").describe("Libraries"),
+]);
+
+const tentacleLocationsOne = z.union([
+    tentacleLocationsOneOverpass,
+    z.literal("metro_station").describe("PID Metro Stations (A/B/C)"),
 ]);
 
 const apiLocationSchema = z.union([
@@ -136,11 +141,11 @@ const apiLocationSchema = z.union([
     z.literal("park"),
     z.literal("peak"),
     tentacleLocationsFifteen,
-    tentacleLocationsOne,
+    tentacleLocationsOneOverpass,
 ]);
 
 const baseTentacleQuestionSchema = ordinaryBaseQuestionSchema.extend({
-    radius: z.number().min(0, "You cannot have a negative radius").default(15),
+    radius: z.number().min(0, "You cannot have a negative radius").default(2),
     unit: unitsSchema.default(getDefaultUnit),
     location: z
         .union([
@@ -173,7 +178,7 @@ const tentacleQuestionSpecificSchemaOne = baseTentacleQuestionSchema.extend({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const encompassingTentacleQuestionSchema = baseTentacleQuestionSchema.extend({
-    locationType: apiLocationSchema,
+    locationType: z.union([apiLocationSchema, z.literal("metro_station")]),
     places: z.array(z.any()).optional(),
 });
 
@@ -196,8 +201,8 @@ const customTentacleQuestionSchema = baseTentacleQuestionSchema.extend({
 
 export const tentacleQuestionSchema = z.union([
     customTentacleQuestionSchema.describe(NO_GROUP),
-    tentacleQuestionSpecificSchemaFifteen.describe("15 Miles (Typically)"),
-    tentacleQuestionSpecificSchemaOne.describe("1 Mile (Typically)"),
+    tentacleQuestionSpecificSchemaFifteen.describe("15 km / 15 Miles"),
+    tentacleQuestionSpecificSchemaOne.describe("2 km / 1 Mile (Medium Game)"),
 ]);
 
 const baseMatchingQuestionSchema = ordinaryBaseQuestionSchema.extend({
@@ -245,6 +250,14 @@ const ordinaryMatchingQuestionSchema = baseMatchingQuestionSchema.extend({
             z
                 .literal("park-full")
                 .describe("Park Question (Small+Medium Games)"),
+            z.literal("pid-zone").describe("PID Tariff Zone (P / 0 / B)"),
+            z
+                .literal("pid-district")
+                .describe("Prague District (MČ Praha 1–22)"),
+            z.literal("pid-line").describe("Nearest PID Metro/Tram Line"),
+            z
+                .literal("vltava-bank")
+                .describe("Vltava River Bank (Left / Right)"),
         ])
         .default("airport"),
 });
@@ -368,6 +381,18 @@ const ordinaryMeasuringQuestionSchema = baseMeasuringQuestionSchema.extend({
             z
                 .literal("park-full")
                 .describe("Park Question (Small+Medium Games)"),
+            z
+                .literal("pid-rail-s")
+                .describe("PID Metro / Train Line S & Stations"),
+            z
+                .literal("prague-border")
+                .describe("Prague City Border (Hranice Prahy)"),
+            z
+                .literal("pid-district-border")
+                .describe("Prague District Border (Hranice MČ)"),
+            z
+                .literal("vltava-river")
+                .describe("Vltava / Berounka River (Řeka Vltava)"),
         ])
         .default("coastline"),
     cat: z

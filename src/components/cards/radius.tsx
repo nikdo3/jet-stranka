@@ -1,6 +1,7 @@
 import { useStore } from "@nanostores/react";
 
 import { LatitudeLongitude } from "@/components/LatLngPicker";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -20,6 +21,15 @@ import { cn } from "@/lib/utils";
 import type { RadiusQuestion } from "@/maps/schema";
 
 import { QuestionCard } from "./base";
+
+const RADIUS_PRESETS = [
+    { label: "500 m", radius: 500, unit: "meters" as const },
+    { label: "1 km", radius: 1, unit: "kilometers" as const },
+    { label: "2 km", radius: 2, unit: "kilometers" as const },
+    { label: "5 km", radius: 5, unit: "kilometers" as const },
+    { label: "10 km", radius: 10, unit: "kilometers" as const },
+    { label: "15 km", radius: 15, unit: "kilometers" as const },
+];
 
 export const RadiusQuestionComponent = ({
     data,
@@ -63,14 +73,15 @@ export const RadiusQuestionComponent = ({
                 <div className={cn(MENU_ITEM_CLASSNAME, "gap-2 flex flex-row")}>
                     <Input
                         type="number"
+                        inputMode="decimal"
                         className="rounded-md p-2 w-16"
                         value={data.radius}
                         disabled={!data.drag || $isLoading}
-                        onChange={(e) =>
-                            questionModified(
-                                (data.radius = parseFloat(e.target.value)),
-                            )
-                        }
+                        onChange={(e) => {
+                            const v = parseFloat(e.target.value);
+                            if (!isNaN(v) && v >= 0)
+                                questionModified((data.radius = v));
+                        }}
                     />
                     <UnitSelect
                         unit={data.unit}
@@ -79,6 +90,24 @@ export const RadiusQuestionComponent = ({
                             questionModified((data.unit = unit))
                         }
                     />
+                </div>
+                <div className="flex flex-wrap gap-1 px-2 pt-1 pb-2">
+                    {RADIUS_PRESETS.map((p) => (
+                        <Button
+                            key={p.label}
+                            variant="outline"
+                            size="sm"
+                            className="h-7 px-2 text-xs"
+                            disabled={!data.drag || $isLoading}
+                            onClick={() => {
+                                data.radius = p.radius;
+                                data.unit = p.unit;
+                                questionModified();
+                            }}
+                        >
+                            {p.label}
+                        </Button>
+                    ))}
                 </div>
             </SidebarMenuItem>
             <LatitudeLongitude

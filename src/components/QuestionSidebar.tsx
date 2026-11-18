@@ -20,6 +20,7 @@ import {
 } from "@/lib/context";
 
 import { AddQuestionDialog } from "./AddQuestionDialog";
+import { PidRulesDialog } from "./PidRulesDialog";
 import {
     MatchingQuestionComponent,
     MeasuringQuestionComponent,
@@ -97,6 +98,15 @@ export const QuestionSidebar = () => {
                 <SidebarGroupContent>
                     <SidebarMenu data-tutorial-id="add-questions-buttons">
                         <SidebarMenuItem>
+                            <PidRulesDialog
+                                trigger={
+                                    <SidebarMenuButton disabled={$isLoading}>
+                                        PID Praha: Vrstvy &amp; Fotky
+                                    </SidebarMenuButton>
+                                }
+                            />
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
                             <AddQuestionDialog>
                                 <SidebarMenuButton disabled={$isLoading}>
                                     Add Question
@@ -105,7 +115,7 @@ export const QuestionSidebar = () => {
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <a
-                                href="https://github.com/taibeled/JetLagHideAndSeek"
+                                href="https://github.com/nikdo3/jet-stranka"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

@@ -83,7 +83,12 @@ export const AddQuestionDialog = ({
         addQuestion({
             id: "matching",
             data: defaultCustomQuestions.get()
-                ? { lat: center.lat, lng: center.lng, type: "custom-points" }
+                ? {
+                      lat: center.lat,
+                      lng: center.lng,
+                      type: "custom-points",
+                      geo: [],
+                  }
                 : { lat: center.lat, lng: center.lng },
         });
         return true;
@@ -96,7 +101,12 @@ export const AddQuestionDialog = ({
         addQuestion({
             id: "measuring",
             data: defaultCustomQuestions.get()
-                ? { lat: center.lat, lng: center.lng, type: "custom-measure" }
+                ? {
+                      lat: center.lat,
+                      lng: center.lng,
+                      type: "custom-measure",
+                      geo: turf.featureCollection([]),
+                  }
                 : { lat: center.lat, lng: center.lng },
         });
         return true;

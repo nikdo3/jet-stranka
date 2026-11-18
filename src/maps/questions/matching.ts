@@ -26,6 +26,12 @@ import {
 } from "@/maps/api";
 import { holedMask, modifyMapData, safeUnion } from "@/maps/geo-utils";
 import { geoSpatialVoronoi } from "@/maps/geo-utils";
+import {
+    fetchPidCityDistricts,
+    fetchPidStopsGeoJSON,
+    fetchPidZones,
+    getVltavaBankPolygon,
+} from "@/maps/pid";
 import type {
     APILocations,
     HomeGameMatchingQuestions,
@@ -140,7 +146,77 @@ export const determineMatchingBoundary = _.memoize(
                 return false;
             }
             case "custom-zone": {
-                boundary = question.geo;
+                const flattened = turf.flatten(question.geo as any);
+                const pt = turf.point([question.lng, question.lat]);
+                boundary =
+                    flattened.features.find(
+                        (f) =>
+                            ((f.geometry.type as string) === "Polygon" ||
+                                (f.geometry.type as string) === "MultiPolygon") &&
+                            turf.booleanPointInPolygon(pt, f as any),
+                    ) ?? question.geo;
+                break;
+            }
+            case "pid-zone": {
+                const zones = await fetchPidZones();
+                const pt = turf.point([question.lng, question.lat]);
+                const zP = zones.features.find(
+                    (f) => f.properties?.zone === "P",
+                );
+                const z0 = zones.features.find(
+                    (f) => f.properties?.zone === "0",
+                );
+                const zB = zones.features.find(
+                    (f) => f.properties?.zone === "B",
+                );
+                if (zP && turf.booleanPointInPolygon(pt, zP)) {
+                    boundary = zP;
+                } else if (z0 && turf.booleanPointInPolygon(pt, z0)) {
+                    boundary = zP
+                        ? turf.difference(turf.featureCollection([z0, zP]))!
+                        : z0;
+                } else if (zB && turf.booleanPointInPolygon(pt, zB)) {
+                    boundary = z0
+                        ? turf.difference(turf.featureCollection([zB, z0]))!
+                        : zB;
+                } else {
+                    boundary = holedMask(zones)!;
+                }
+                break;
+            }
+            case "pid-district": {
+                const districts = await fetchPidCityDistricts();
+                const voronoi = geoSpatialVoronoi(districts);
+                const pt = turf.point([question.lng, question.lat]);
+                boundary = voronoi.features.find((f) =>
+                    turf.booleanPointInPolygon(pt, f),
+                );
+                if (!boundary) {
+                    toast.error("No PID district found at this location");
+                    throw new Error("No PID district found");
+                }
+                break;
+            }
+            case "pid-line": {
+                const stops = await fetchPidStopsGeoJSON();
+                const pt = turf.point([question.lng, question.lat]);
+                const nearest = turf.nearestPoint(pt, stops);
+                const targetLines: string[] = nearest.properties?.lines ?? [];
+                const voronoi = geoSpatialVoronoi(stops);
+                const matchingCells = voronoi.features.filter((cell: any) => {
+                    const cellLines: string[] =
+                        cell.properties?.site?.properties?.lines ?? [];
+                    return cellLines.some((l) => targetLines.includes(l));
+                });
+                if (matchingCells.length === 0) {
+                    toast.error("No PID line found at this location");
+                    throw new Error("No PID line found");
+                }
+                boundary = safeUnion(turf.featureCollection(matchingCells));
+                break;
+            }
+            case "vltava-bank": {
+                boundary = getVltavaBankPolygon(question.lng, question.lat);
                 break;
             }
             case "zone": {
@@ -304,6 +380,7 @@ export const hiderifyMatching = async (question: MatchingQuestion) => {
             drag: false,
             color: "black",
             collapsed: false,
+            hidden: false,
         });
 
         question.same =

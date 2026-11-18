@@ -1,8 +1,9 @@
 import { useStore } from "@nanostores/react";
-import { point } from "@turf/turf";
+import * as turf from "@turf/turf";
 import { useEffect, useState } from "react";
 
 import { LatitudeLongitude } from "@/components/LatLngPicker";
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { defaultUnit } from "@/lib/context";
@@ -61,8 +62,8 @@ export const ThermometerQuestionComponent = ({
 
         let cancelled = false;
         arcDistance(
-            point([data.lngA!, data.latA!]),
-            point([data.lngB!, data.latB!]),
+            turf.point([data.lngA!, data.latA!]),
+            turf.point([data.lngB!, data.latB!]),
             DISTANCE_UNIT,
         ).then((distance) => {
             if (!cancelled) setDistanceValue(distance);
@@ -129,6 +130,48 @@ export const ThermometerQuestionComponent = ({
                     </span>
                 </div>
             )}
+
+            <div className="flex gap-1 px-2 pt-1 pb-1">
+                {[1, 5, 15].map((dist) => (
+                    <Button
+                        key={dist}
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2 text-xs"
+                        disabled={
+                            data.latA === null ||
+                            data.lngA === null ||
+                            !data.drag ||
+                            $isLoading
+                        }
+                        onClick={() => {
+                            if (data.latA === null || data.lngA === null) return;
+                            let bearing = 90;
+                            if (
+                                data.latB !== null &&
+                                data.lngB !== null &&
+                                (data.latA !== data.latB || data.lngA !== data.lngB)
+                            ) {
+                                bearing = turf.bearing(
+                                    [data.lngA, data.latA],
+                                    [data.lngB, data.latB],
+                                );
+                            }
+                            const destination = turf.destination(
+                                [data.lngA, data.latA],
+                                dist,
+                                bearing,
+                                { units: "kilometers" },
+                            );
+                            data.latB = destination.geometry.coordinates[1];
+                            data.lngB = destination.geometry.coordinates[0];
+                            questionModified();
+                        }}
+                    >
+                        {dist} km
+                    </Button>
+                ))}
+            </div>
 
             <div className="flex gap-2 items-center p-2">
                 <Label

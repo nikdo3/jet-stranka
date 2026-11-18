@@ -12,6 +12,7 @@ import {
     polyGeoJSON,
 } from "@/lib/context";
 import { safeUnion } from "@/maps/geo-utils";
+import { fetchPidStopsGeoJSON, fetchPragueBorderGeoJSON } from "@/maps/pid";
 
 import { cacheFetch, determineCache } from "./cache";
 import { LOCATION_FIRST_TAG, OVERPASS_HOSTS } from "./constants";
@@ -87,6 +88,13 @@ export const determineGeoJSON = async (
     osmId: string,
     osmTypeLetter: "W" | "R" | "N",
 ): Promise<any> => {
+    if (osmId === "435514" && osmTypeLetter === "R") {
+        try {
+            return await fetchPragueBorderGeoJSON();
+        } catch {
+            // Fall back to Overpass
+        }
+    }
     const osmTypeMap: { [key: string]: string } = {
         W: "way",
         R: "relation",
@@ -112,6 +120,28 @@ export const findTentacleLocations = async (
     question: TentacleLocationQuery,
     text: string = "Determining tentacle locations...",
 ) => {
+    if (question.locationType === "metro_station") {
+        const stops = await fetchPidStopsGeoJSON();
+        const center = turf.point([question.lng, question.lat]);
+        const maxMeters = turf.convertLength(
+            question.radius,
+            question.unit,
+            "meters",
+        );
+        const seen = new Set<string>();
+        const features = stops.features.filter((f) => {
+            if (f.properties?.is_metro !== true) return false;
+            const name = f.properties?.name;
+            if (!name || seen.has(name)) return false;
+            if (turf.distance(center, f, { units: "meters" }) > maxMeters) {
+                return false;
+            }
+            seen.add(name);
+            return true;
+        });
+        return turf.featureCollection(features);
+    }
+
     const query = `
 [out:json][timeout:25];
 nwr["${LOCATION_FIRST_TAG[question.locationType]}"="${question.locationType}"](around:${turf.convertLength(
@@ -186,6 +216,7 @@ export const trainLineNodeFinder = async (node: string): Promise<number[]> => {
 [out:json];
 node(${nodeId});
 wr(bn);
+rel(bn)["route"~"train|subway|tram|light_rail|monorail"];
 out tags;
 `;
     const tagData = await getOverpassData(tagQuery, "Finding train line...");
@@ -321,6 +352,21 @@ out ${outType};
         loadingText,
         CacheType.ZONE_CACHE,
     );
+    if (data && Array.isArray(data.elements)) {
+        data.elements = data.elements.filter(
+            (el: any) =>
+                !(
+                    el.tags?.proposed ||
+                    el.tags?.construction ||
+                    el.tags?.disused === "yes" ||
+                    el.tags?.abandoned === "yes" ||
+                    el.tags?.["disused:railway"] ||
+                    el.tags?.["proposed:railway"] ||
+                    el.tags?.["construction:railway"] ||
+                    el.tags?.["abandoned:railway"]
+                ),
+        );
+    }
     const subtractedEntries = additionalMapGeoLocations
         .get()
         .filter((e) => !e.added);

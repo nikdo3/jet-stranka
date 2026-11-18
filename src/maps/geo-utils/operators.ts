@@ -82,7 +82,8 @@ export const arcDistance = (
                 toArcGISGeometry(second),
                 { unit },
             ),
-        );
+        )
+        .catch(() => turf.distance(first as any, second as any, { units: unit }));
 
 export const arcBuffer = (
     geometry: FeatureCollection,
@@ -101,23 +102,34 @@ const innateArcBuffer = async (
     distance: number,
     unit: units.LengthUnit & turf.Units = DEFAULT_BUFFER_UNIT,
 ) => {
-    await geodesicBufferOperator.load();
+    try {
+        await geodesicBufferOperator.load();
 
-    const bufferedGeometry = geodesicBufferOperator.executeMany(
-        arcgisGeometry,
-        Array(arcgisGeometry.length).fill(distance),
-        {
-            union: true,
-            unit: unit,
-            maxDeviation: turf.convertLength(3, "feet", unit),
-        },
-    );
+        const bufferedGeometry = geodesicBufferOperator.executeMany(
+            arcgisGeometry,
+            Array(arcgisGeometry.length).fill(distance),
+            {
+                union: true,
+                unit: unit,
+                maxDeviation: turf.convertLength(3, "feet", unit),
+            },
+        );
 
-    return turf.combine(
-        turf.featureCollection([
-            turf.feature(arcgisToGeoJSON(bufferedGeometry[0] as any)),
-        ]) as any,
-    ).features[0] as Feature<MultiPolygon>;
+        return turf.combine(
+            turf.featureCollection([
+                turf.feature(arcgisToGeoJSON(bufferedGeometry[0] as any)),
+            ]) as any,
+        ).features[0] as Feature<MultiPolygon>;
+    } catch {
+        const geoFeatures = arcgisGeometry.map((g) =>
+            turf.feature(arcgisToGeoJSON(g as any)),
+        );
+        return turf.combine(
+            turf.buffer(turf.featureCollection(geoFeatures) as any, distance, {
+                units: unit,
+            }) as any,
+        ).features[0] as Feature<MultiPolygon>;
+    }
 };
 
 export const arcBufferToPoint = async (

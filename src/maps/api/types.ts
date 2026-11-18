@@ -51,11 +51,15 @@ export interface CustomStation {
     name?: string;
     lat: number;
     lng: number;
+    lines?: string[];
+    zone?: string;
+    is_metro?: boolean;
+    is_tram?: boolean;
 }
 
 export interface StationPlaceProperties {
     id: string;
-    [key: string]: string | undefined;
+    [key: string]: any;
 }
 
 export type StationPlace = Feature<Point, StationPlaceProperties>;

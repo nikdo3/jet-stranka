@@ -55,9 +55,11 @@ import {
     uploadToPastebin,
 } from "@/lib/utils";
 import { OVERPASS_HOSTS } from "@/maps/api/constants";
+import { loadPidPraguePreset } from "@/maps/pid";
 import { questionsSchema } from "@/maps/schema";
 
 import { LatitudeLongitude } from "./LatLngPicker";
+import { PidRulesDialog } from "./PidRulesDialog";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Input } from "./ui/input";
@@ -516,6 +518,15 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                 >
                                     Paste Hiding Zone
                                 </Button>
+                            </div>
+                            <div className="flex flex-row max-[330px]:flex-col gap-4">
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => loadPidPraguePreset()}
+                                >
+                                    PID Praha Preset
+                                </Button>
+                                <PidRulesDialog />
                             </div>
                             <Separator className="bg-slate-300 w-[280px]" />
                             <Label>Default Unit</Label>

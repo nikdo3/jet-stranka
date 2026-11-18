@@ -61,6 +61,7 @@ import {
     mergeDuplicateStation,
     safeUnion,
 } from "@/maps/geo-utils";
+import { loadPidPraguePreset } from "@/maps/pid";
 
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -178,62 +179,70 @@ export const ZoneSidebar = () => {
         const initializeHidingZones = async () => {
             isLoading.set(true);
 
-            const needsDefault = !useCustomStations || includeDefaultStations;
-            if (needsDefault && $displayHidingZonesOptions.length === 0) {
-                toast.error("At least one place type must be selected");
-                isLoading.set(false);
-                return;
-            }
+            try {
+                const safeRadius =
+                    $hidingRadius > 0 && isFinite($hidingRadius)
+                        ? $hidingRadius
+                        : 0.001;
 
-            let places: StationPlace[] = [];
+                const needsDefault =
+                    !useCustomStations || includeDefaultStations;
+                if (needsDefault && $displayHidingZonesOptions.length === 0) {
+                    toast.error("At least one place type must be selected");
+                    return;
+                }
 
-            if (!needsDefault) {
-                // Custom only
-                places = normalizeToStationFeatures(
-                    $customStations,
-                ).features.map((f) => ({
-                    type: "Feature",
-                    geometry: f.geometry,
-                    properties: {
-                        id:
-                            f.properties?.id ||
-                            `${(f.geometry as any).coordinates[1]},${(f.geometry as any).coordinates[0]}`,
-                        name: f.properties?.name,
-                    },
-                }));
-            } else {
-                // Fetch default, optionally merge custom
-                // @ts-expect-error osmtogeojson always defines properties with an "id" string
-                places = osmtogeojson(
-                    await findPlacesInZone(
-                        $displayHidingZonesOptions[0],
-                        "Finding stations. This may take a while. Do not press any buttons while this is processing. Don't worry, it will be cached.",
-                        "nwr",
-                        "center",
-                        $displayHidingZonesOptions.slice(1),
-                    ),
-                ).features;
+                let places: StationPlace[] = [];
 
-                if (
-                    useCustomStations &&
-                    $customStations.length > 0 &&
-                    includeDefaultStations
-                ) {
-                    const customFeatures = normalizeToStationFeatures(
+                if (!needsDefault) {
+                    // Custom only
+                    places = normalizeToStationFeatures(
                         $customStations,
-                    ).features.map(
-                        (f) =>
-                            ({
-                                type: "Feature",
-                                geometry: f.geometry,
-                                properties: {
-                                    id:
-                                        f.properties?.id ||
-                                        `${f.geometry.coordinates[1]},${f.geometry.coordinates[0]}`,
-                                    name: f.properties?.name,
-                                },
-                            }) as StationPlace,
-                    );
+                    ).features.map((f) => ({
+                        type: "Feature",
+                        geometry: f.geometry,
+                        properties: {
+                            ...f.properties,
+                            id:
+                                f.properties?.id ||
+                                `${(f.geometry as any).coordinates[1]},${(f.geometry as any).coordinates[0]}`,
+                            name: f.properties?.name,
+                        },
+                    }));
+                } else {
+                    // Fetch default, optionally merge custom
+                    // @ts-expect-error osmtogeojson always defines properties with an "id" string
+                    places = osmtogeojson(
+                        await findPlacesInZone(
+                            $displayHidingZonesOptions[0],
+                            "Finding stations. This may take a while. Do not press any buttons while this is processing. Don't worry, it will be cached.",
+                            "nwr",
+                            "center",
+                            $displayHidingZonesOptions.slice(1),
+                        ),
+                    ).features;
+
+                    if (
+                        useCustomStations &&
+                        $customStations.length > 0 &&
+                        includeDefaultStations
+                    ) {
+                        const customFeatures = normalizeToStationFeatures(
+                            $customStations,
+                        ).features.map(
+                            (f) =>
+                                ({
+                                    type: "Feature",
+                                    geometry: f.geometry,
+                                    properties: {
+                                        ...f.properties,
+                                        id:
+                                            f.properties?.id ||
+                                            `${f.geometry.coordinates[1]},${f.geometry.coordinates[0]}`,
+                                        name: f.properties?.name,
+                                    },
+                                }) as StationPlace,
+                        );
                     const seen = new Set<string>();
                     const merged: StationPlace[] = [];
                     const add = (feat: StationPlace) => {
@@ -257,7 +266,7 @@ export const ZoneSidebar = () => {
             if (mergeDuplicates) {
                 places = await mergeDuplicateStation(
                     places,
-                    $hidingRadius,
+                    safeRadius,
                     $hidingRadiusUnits,
                 );
             }
@@ -270,9 +279,8 @@ export const ZoneSidebar = () => {
 
             let circles = places
                 .map((place) => {
-                    const radius = $hidingRadius;
                     const center = turf.getCoord(place);
-                    const circle = turf.circle(center, radius, {
+                    const circle = turf.circle(center, safeRadius, {
                         steps: 32,
                         units: $hidingRadiusUnits,
                         properties: place,
@@ -308,8 +316,32 @@ export const ZoneSidebar = () => {
                     );
 
                     if (question.data.type === "same-train-line") {
-                        // Custom-only lists don't have reliable OSM IDs
-                        if (useCustomStations && !includeDefaultStations) {
+                        const targetLines = (
+                            nearestTrainStation.properties as any
+                        )?.lines;
+                        if (
+                            Array.isArray(targetLines) &&
+                            targetLines.length > 0
+                        ) {
+                            circles = circles.filter((circle) => {
+                                const circleLines = (
+                                    circle.properties.properties as any
+                                )?.lines;
+                                if (!Array.isArray(circleLines)) {
+                                    return !question.data.same;
+                                }
+                                const sharesLine = circleLines.some(
+                                    (l: string) => targetLines.includes(l),
+                                );
+                                return question.data.same
+                                    ? sharesLine
+                                    : !sharesLine;
+                            });
+                        } else if (
+                            useCustomStations &&
+                            !includeDefaultStations
+                        ) {
+                            // Custom-only lists without line metadata don't have reliable OSM IDs
                             toast.warning(
                                 "'Same train line' isn't supported with custom-only station lists; skipping this filter.",
                             );
@@ -422,8 +454,8 @@ export const ZoneSidebar = () => {
                             );
 
                             return question.data.hiderCloser
-                                ? stationDistance < distance + $hidingRadius
-                                : stationDistance > distance - $hidingRadius;
+                                ? stationDistance < distance + safeRadius
+                                : stationDistance > distance - safeRadius;
                         }),
                     );
                     circles = circles.filter(
@@ -433,17 +465,21 @@ export const ZoneSidebar = () => {
             }
 
             setStations(circles);
-            isLoading.set(false);
+            } finally {
+                isLoading.set(false);
+            }
         };
 
         if ($displayHidingZones && $questionFinishedMapData) {
-            initializeHidingZones().catch((error) => {
-                console.log("Error in hiding zone initialization:", error);
-                toast.error(
-                    "An error occurred during hiding zone initialization",
-                    { toastId: "hiding-zone-initialization-error" },
-                );
-            });
+            initializeHidingZones()
+                .catch((error) => {
+                    console.log("Error in hiding zone initialization:", error);
+                    toast.error(
+                        "An error occurred during hiding zone initialization",
+                        { toastId: "hiding-zone-initialization-error" },
+                    );
+                })
+                .finally(() => isLoading.set(false));
         }
     }, [
         $questionFinishedMapData,
@@ -581,6 +617,17 @@ export const ZoneSidebar = () => {
                                                 GeoJSON, KML). This must be a
                                                 raw file link.
                                             </Label>
+                                            <Button
+                                                size="sm"
+                                                variant="secondary"
+                                                className="w-full"
+                                                disabled={$isLoading}
+                                                onClick={() =>
+                                                    loadPidPraguePreset()
+                                                }
+                                            >
+                                                Načíst PID Praha zastávky (286)
+                                            </Button>
                                             <div className="flex gap-2">
                                                 <Input
                                                     placeholder="https://..."
@@ -845,11 +892,22 @@ export const ZoneSidebar = () => {
                                 >
                                     <Input
                                         type="number"
+                                        inputMode="decimal"
+                                        min={0.01}
+                                        step="any"
                                         className="rounded-md p-2 w-16"
                                         value={$hidingRadius}
                                         onChange={(e) => {
+                                            const val = parseFloat(
+                                                e.target.value.replace(
+                                                    ",",
+                                                    ".",
+                                                ),
+                                            );
                                             hidingRadius.set(
-                                                parseFloat(e.target.value),
+                                                !isFinite(val) || val <= 0
+                                                    ? 0.001
+                                                    : val,
                                             );
                                         }}
                                         disabled={$isLoading}

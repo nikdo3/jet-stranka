@@ -15,6 +15,7 @@ import {
     animateMapMovements,
     autoZoom,
     baseTileLayer,
+    customStations,
     followMe,
     hiderMode,
     isLoading,
@@ -33,6 +34,7 @@ import { cn } from "@/lib/utils";
 import { applyQuestionsToMapGeoData, holedMask } from "@/maps";
 import { hiderifyQuestion } from "@/maps";
 import { clearCache, determineMapBoundaries } from "@/maps/api";
+import { loadPidPraguePreset } from "@/maps/pid";
 
 import { DraggableMarkers } from "./DraggableMarkers";
 import { LeafletFullScreenButton } from "./LeafletFullScreenButton";
@@ -244,7 +246,8 @@ export const Map = ({ className }: { className?: string }) => {
         () => (
             <MapContainer
                 center={$mapGeoLocation.geometry.coordinates}
-                zoom={5}
+                zoom={11}
+                preferCanvas={true}
                 className={cn("w-[500px] h-[500px]", className)}
                 ref={leafletMapContext.set}
                 // @ts-expect-error Typing doesn't update from react-contextmenu
@@ -401,22 +404,27 @@ export const Map = ({ className }: { className?: string }) => {
     }, [$questions, map, $hiderMode]);
 
     useEffect(() => {
-        const intervalId = setInterval(async () => {
-            if (!map) return;
-            let layerCount = 0;
-            map.eachLayer((layer: any) => {
-                if (layer.eliminationGeoJSON) {
-                    // Hopefully only geoJSON layers
-                    layerCount++;
-                }
-            });
-            if (layerCount > 1) {
-                console.log("Too many layers, refreshing...");
-                refreshQuestions(false);
-            }
-        }, 1000);
+        if (!map) return;
+        const container = map.getContainer();
+        const observer = new ResizeObserver(() => {
+            map.invalidateSize();
+        });
+        observer.observe(container);
+        return () => observer.disconnect();
+    }, [map]);
 
-        return () => clearInterval(intervalId);
+    useEffect(() => {
+        if (!map) return;
+        if (
+            mapGeoLocation.get().properties.osm_id === 435514 &&
+            permanentOverlay.get() === null &&
+            customStations.get().length === 0
+        ) {
+            loadPidPraguePreset().catch((err) => {
+                console.error("Failed to auto-load Prague PID preset:", err);
+                toast.error("Nepodařilo se načíst výchozí PID Praha data");
+            });
+        }
     }, [map]);
 
     useEffect(() => {
@@ -506,10 +514,57 @@ export const Map = ({ className }: { className?: string }) => {
             const overlay = L.geoJSON($permanentOverlay, {
                 interactive: false,
 
-                // @ts-expect-error Type hints force a Layer to be returned, but Leaflet accepts null as well
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 pointToLayer(geoJsonPoint, latlng) {
-                    return null;
+                    const props = geoJsonPoint.properties ?? {};
+                    const style = props.is_metro
+                        ? {
+                              radius: 5,
+                              color: "#0F172A",
+                              fillColor: "#FACC15",
+                              fillOpacity: 0.95,
+                              weight: 2,
+                          }
+                        : props.category === "tram_stop"
+                          ? {
+                                radius: 3,
+                                color: "#334155",
+                                fillColor: "#FFFFFF",
+                                fillOpacity: 0.9,
+                                weight: 1.5,
+                            }
+                          : {
+                                radius: 2.5,
+                                color: "#64748B",
+                                fillColor: "#94A3B8",
+                                fillOpacity: 0.7,
+                                weight: 1,
+                            };
+
+                    const marker = L.circleMarker(latlng, {
+                        ...style,
+                        interactive: true,
+                    });
+
+                    if (props.name) {
+                        const escapeHtml = (s: string) =>
+                            s
+                                .replace(/&/g, "&amp;")
+                                .replace(/</g, "&lt;")
+                                .replace(/>/g, "&gt;");
+                        const details = [
+                            props.zone ? `Pásmo ${props.zone}` : null,
+                            Array.isArray(props.lines) && props.lines.length > 0
+                                ? `Linky: ${props.lines.join(", ")}`
+                                : null,
+                        ].filter(Boolean);
+                        const html =
+                            details.length > 0
+                                ? `<strong>${escapeHtml(String(props.name))}</strong><br/>${escapeHtml(details.join(" • "))}`
+                                : `<strong>${escapeHtml(String(props.name))}</strong>`;
+                        marker.bindTooltip(html);
+                    }
+
+                    return marker;
                 },
 
                 style(feature) {

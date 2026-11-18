@@ -68,19 +68,20 @@ export const TentacleQuestionComponent = ({
             locked={!data.drag}
             setLocked={(locked) => questionModified((data.drag = !locked))}
             hidden={data.hidden}
-            setHidden={(hidden) => questionModified((data.hidden = !hidden))}
+            setHidden={(hidden) => questionModified((data.hidden = hidden))}
         >
             <SidebarMenuItem>
                 <div className={cn(MENU_ITEM_CLASSNAME, "gap-2 flex flex-row")}>
                     <Input
                         type="number"
+                        inputMode="decimal"
                         className="rounded-md p-2 w-16"
                         value={data.radius}
-                        onChange={(e) =>
-                            questionModified(
-                                (data.radius = parseFloat(e.target.value)),
-                            )
-                        }
+                        onChange={(e) => {
+                            const v = parseFloat(e.target.value);
+                            if (!isNaN(v) && v >= 0)
+                                questionModified((data.radius = v));
+                        }}
                         disabled={!data.drag || $isLoading}
                     />
                     <UnitSelect

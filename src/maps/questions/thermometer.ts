@@ -5,16 +5,26 @@ import { safeUnion } from "@/maps/geo-utils";
 import { geoSpatialVoronoi } from "@/maps/geo-utils/voronoi";
 import type { ThermometerQuestion } from "@/maps/schema";
 
+const getThermometerPoints = (question: ThermometerQuestion) => {
+    const latB =
+        Math.abs(question.latB - question.latA) < 1e-5
+            ? question.latB + 1e-5
+            : question.latB;
+    return [
+        turf.point([question.lngA, question.latA]),
+        turf.point([question.lngB, latB]),
+    ];
+};
+
 export const adjustPerThermometer = (
     question: ThermometerQuestion,
     mapData: any,
 ) => {
     if (mapData === null) return;
 
-    const pointA = turf.point([question.lngA, question.latA]);
-    const pointB = turf.point([question.lngB, question.latB]);
-
-    const voronoi = geoSpatialVoronoi(turf.featureCollection([pointA, pointB]));
+    const voronoi = geoSpatialVoronoi(
+        turf.featureCollection(getThermometerPoints(question)),
+    );
 
     if (question.warmer) {
         return turf.intersect(
@@ -33,10 +43,9 @@ export const hiderifyThermometer = (question: ThermometerQuestion) => {
         return question;
     }
 
-    const pointA = turf.point([question.lngA, question.latA]);
-    const pointB = turf.point([question.lngB, question.latB]);
-
-    const voronoi = geoSpatialVoronoi(turf.featureCollection([pointA, pointB]));
+    const voronoi = geoSpatialVoronoi(
+        turf.featureCollection(getThermometerPoints(question)),
+    );
 
     const hiderPoint = turf.point([$hiderMode.longitude, $hiderMode.latitude]);
     const hiderRegion = turf.booleanPointInPolygon(
@@ -56,10 +65,9 @@ export const hiderifyThermometer = (question: ThermometerQuestion) => {
 };
 
 export const thermometerPlanningPolygon = (question: ThermometerQuestion) => {
-    const pointA = turf.point([question.lngA, question.latA]);
-    const pointB = turf.point([question.lngB, question.latB]);
-
-    const voronoi = geoSpatialVoronoi(turf.featureCollection([pointA, pointB]));
+    const voronoi = geoSpatialVoronoi(
+        turf.featureCollection(getThermometerPoints(question)),
+    );
 
     return turf.featureCollection(
         voronoi.features

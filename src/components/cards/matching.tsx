@@ -78,15 +78,15 @@ export const MatchingQuestionComponent = ({
                         <Select
                             trigger="OSM Zone"
                             options={{
-                                2: "OSM Zone 2 (Country)",
-                                3: "OSM Zone 3 (region in Japan)",
-                                4: "OSM Zone 4 (prefecture in Japan)",
+                                2: "OSM Zone 2 (Country / Česko)",
+                                3: "OSM Zone 3 (Region / Region)",
+                                4: "OSM Zone 4 (Kraj / Praha)",
                                 5: "OSM Zone 5",
-                                6: "OSM Zone 6",
+                                6: "OSM Zone 6 (Okres / Praha)",
                                 7: "OSM Zone 7",
-                                8: "OSM Zone 8",
+                                8: "OSM Zone 8 (Obec / Město)",
                                 9: "OSM Zone 9",
-                                10: "OSM Zone 10",
+                                10: "OSM Zone 10 (Městská část)",
                             }}
                             value={data.cat.adminLevel.toString()}
                             onValueChange={(value) =>
@@ -191,7 +191,7 @@ export const MatchingQuestionComponent = ({
             locked={!data.drag}
             setLocked={(locked) => questionModified((data.drag = !locked))}
             hidden={data.hidden}
-            setHidden={(hidden) => questionModified((data.hidden = !hidden))}
+            setHidden={(hidden) => questionModified((data.hidden = hidden))}
         >
             <CustomInitDialog
                 open={customDialogOpen}

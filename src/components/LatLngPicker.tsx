@@ -40,26 +40,19 @@ import { SidebarMenuItem } from "./ui/sidebar-l";
 const parseCoordinatesFromText = (
     text: string,
 ): { lat: number | null; lng: number | null } => {
-    // Format: decimal degrees (e.g., 37.7749, -122.4194 or 37,7749, -122,4194)
-    const decimalPattern = /(-?\d+[.,]\d+)\s*,\s*(-?\d+[.,]\d+)/;
+    if (!text) return { lat: null, lng: null };
+
+    // Normalize Unicode whitespace/NBSP and Unicode minus
+    const normalized = text
+        .replace(/[\u00A0\u1680\u2000-\u200B\u202F\u205F\u3000\uFEFF]/g, " ")
+        .replace(/[\u2212\u2010-\u2015]/g, "-")
+        .trim();
 
     // Format: degrees, minutes, seconds (e.g., 37°46'26"N, 122°25'10"W)
     const dmsPattern =
-        /(\d+)°\s*(\d+)['′]?\s*(?:(\d+(?:\.\d+)?)["″]?\s*)?([NS])[,\s]+(\d+)°\s*(\d+)['′]?\s*(?:(\d+(?:\.\d+)?)["″]?\s*)?([EW])/i;
+        /(\d+)°\s*(\d+)['′]?\s*(?:(\d+(?:\.\d+)?)["″]?\s*)?([NS])[,;\s]+(\d+)°\s*(\d+)['′]?\s*(?:(\d+(?:\.\d+)?)["″]?\s*)?([EW])/i;
 
-    // Format: decimal degrees with cardinal directions (e.g., 48,89607° N, 9,09885° E or 48.89607° N, 9.09885° E)
-    const decimalCardinalPattern =
-        /(\d+[.,]\d+)°\s*([NS])\s*,\s*(\d+[.,]\d+)°\s*([EW])/i;
-
-    const decimalMatch = text.match(decimalPattern);
-    if (decimalMatch) {
-        return {
-            lat: parseFloat(decimalMatch[1].replace(",", ".")),
-            lng: parseFloat(decimalMatch[2].replace(",", ".")),
-        };
-    }
-
-    const dmsMatch = text.match(dmsPattern);
+    const dmsMatch = normalized.match(dmsPattern);
     if (dmsMatch) {
         let lat =
             parseInt(dmsMatch[1]) +
@@ -76,7 +69,11 @@ const parseCoordinatesFromText = (
         return { lat, lng };
     }
 
-    const decimalCardinalMatch = text.match(decimalCardinalPattern);
+    // Format: decimal degrees with cardinal directions (e.g., 48,89607° N, 9,09885° E or 48.89607° N; 9.09885° E)
+    const decimalCardinalPattern =
+        /(\d+[.,]\d+)°\s*([NS])\s*[,;]?\s*(\d+[.,]\d+)°\s*([EW])/i;
+
+    const decimalCardinalMatch = normalized.match(decimalCardinalPattern);
     if (decimalCardinalMatch) {
         let lat = parseFloat(decimalCardinalMatch[1].replace(",", "."));
         let lng = parseFloat(decimalCardinalMatch[3].replace(",", "."));
@@ -85,6 +82,36 @@ const parseCoordinatesFromText = (
         if (decimalCardinalMatch[4].toUpperCase() === "W") lng = -lng;
 
         return { lat, lng };
+    }
+
+    // Format: decimal degrees separated by semicolon (e.g., 50.0875; 14.4210 or 50,0875; 14,4210)
+    const semicolonPattern = /(-?\d+(?:[.,]\d+)?)\s*;\s*(-?\d+(?:[.,]\d+)?)/;
+    const semicolonMatch = normalized.match(semicolonPattern);
+    if (semicolonMatch) {
+        return {
+            lat: parseFloat(semicolonMatch[1].replace(",", ".")),
+            lng: parseFloat(semicolonMatch[2].replace(",", ".")),
+        };
+    }
+
+    // Format: decimal degrees (e.g., 37.7749, -122.4194 or 37,7749, -122,4194)
+    const decimalPattern = /(-?\d+[.,]\d+)\s*,\s*(-?\d+[.,]\d+)/;
+    const decimalMatch = normalized.match(decimalPattern);
+    if (decimalMatch) {
+        return {
+            lat: parseFloat(decimalMatch[1].replace(",", ".")),
+            lng: parseFloat(decimalMatch[2].replace(",", ".")),
+        };
+    }
+
+    // Format: decimal degrees separated by whitespace (e.g., 50.0875 14.4210)
+    const spacePattern = /(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)/;
+    const spaceMatch = normalized.match(spacePattern);
+    if (spaceMatch) {
+        return {
+            lat: parseFloat(spaceMatch[1].replace(",", ".")),
+            lng: parseFloat(spaceMatch[2].replace(",", ".")),
+        };
     }
 
     return { lat: null, lng: null };
@@ -185,6 +212,7 @@ const LatLngEditForm = ({
                 <Label className="min-w-16">Latitude</Label>
                 <Input
                     type="number"
+                    inputMode="decimal"
                     value={Math.abs(latitude)}
                     min={0}
                     max={90}
@@ -210,6 +238,7 @@ const LatLngEditForm = ({
                 <Label className="min-w-16">Longitude</Label>
                 <Input
                     type="number"
+                    inputMode="decimal"
                     value={Math.abs(longitude)}
                     min={0}
                     max={180}
@@ -448,6 +477,7 @@ export const LatitudeLongitude = ({
                                         },
                                     )
                                         .then((position) => {
+                                            isLoading.set(false);
                                             onChange(
                                                 position.coords.latitude,
                                                 position.coords.longitude,
@@ -472,38 +502,52 @@ export const LatitudeLongitude = ({
                         <Button
                             variant="outline"
                             onClick={() => {
-                                if (!navigator || !navigator.clipboard) {
-                                    toast.error(
-                                        "Clipboard API not supported in your browser",
-                                    );
-                                    return;
-                                }
-
                                 isLoading.set(true);
 
+                                const getCoordinates = async () => {
+                                    let text: string | null = null;
+                                    try {
+                                        if (navigator?.clipboard?.readText) {
+                                            text = await navigator.clipboard.readText();
+                                        }
+                                    } catch {
+                                        // Clipboard permission denied or unavailable
+                                    }
+
+                                    let coords = text
+                                        ? parseCoordinatesFromText(text)
+                                        : { lat: null, lng: null };
+
+                                    if (
+                                        coords.lat === null ||
+                                        coords.lng === null
+                                    ) {
+                                        const promptVal = window.prompt(
+                                            "Vložte souřadnice (např. 50.0875, 14.4210):",
+                                        );
+                                        if (promptVal) {
+                                            coords = parseCoordinatesFromText(promptVal);
+                                        }
+                                    }
+
+                                    if (
+                                        coords.lat !== null &&
+                                        coords.lng !== null
+                                    ) {
+                                        isLoading.set(false);
+                                        onChange(coords.lat, coords.lng);
+                                        return;
+                                    }
+
+                                    throw new Error(
+                                        "Could not find coordinates in clipboard content",
+                                    );
+                                };
+
                                 toast.promise(
-                                    navigator.clipboard
-                                        .readText()
-                                        .then((text) => {
-                                            const coords =
-                                                parseCoordinatesFromText(text);
-                                            if (
-                                                coords.lat !== null &&
-                                                coords.lng !== null
-                                            ) {
-                                                onChange(
-                                                    coords.lat,
-                                                    coords.lng,
-                                                );
-                                                return;
-                                            }
-                                            throw new Error(
-                                                "Could not find coordinates in clipboard content",
-                                            );
-                                        })
-                                        .finally(() => {
-                                            isLoading.set(false);
-                                        }),
+                                    getCoordinates().finally(() => {
+                                        isLoading.set(false);
+                                    }),
                                     {
                                         pending: "Reading from clipboard",
                                         success:

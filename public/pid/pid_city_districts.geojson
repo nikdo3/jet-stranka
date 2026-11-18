@@ -1,0 +1,531 @@
+{
+  "type": "FeatureCollection",
+  "name": "PID_Praha_Casti_Mesta_a_Ctvrti",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "STARÉ MĚSTO", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.421000,50.087500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "NOVÉ MĚSTO", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.426500,50.076500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MALÁ STRANA", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.403500,50.088000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HRADČANY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.391000,50.090500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VINOHRADY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.451000,50.075500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ŽIŽKOV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.462000,50.086500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KARLÍN", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.451500,50.092500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HOLEŠOVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.438000,50.103500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BUBENEČ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.408000,50.103500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "DEJVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.383000,50.103000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SMÍCHOV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.402500,50.068000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "NUSLE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.438500,50.060000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VRŠOVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.463000,50.068000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PODOLÍ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.422000,50.055000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BRANÍK", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.417000,50.036500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KRČ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.450000,50.036500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MICHLE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.462500,50.052500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "STRAŠNICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.492500,50.072000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ZÁBĚHLICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.494000,50.054500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MALEŠICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.512000,50.082500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VYSOČANY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.504000,50.109500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LIBEŇ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.468000,50.108500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KOBYLISY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.456000,50.129000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BOHNICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.417500,50.133500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "TROJA", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.415000,50.118500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PROSEK", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.498000,50.119000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "STŘÍŽKOV", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.482000,50.126000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HLOUBĚTÍN", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.537000,50.104500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BŘEVNOV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.361000,50.084000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "STŘEŠOVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.376500,50.092000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VOKOVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.346500,50.098500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VELESLAVÍN", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.349000,50.093000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LIBOC", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.324500,50.088500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MOTOL", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.342000,50.069500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KOŠÍŘE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.374000,50.068500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "RADLICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.391000,50.058500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "JINONICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.364000,50.053500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HLUBOČEPY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.392000,50.040000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BARRANDOV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.375500,50.032000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MODŘANY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.421500,50.006500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HODKOVIČKY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.414500,50.023500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LHOTKA", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.441500,50.019500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KAMÝK", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.436000,50.014000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KOMOŘANY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.414000,49.988500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LIBUŠ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.458500,50.008500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KUNRATICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.484000,50.012500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "CHODOV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.496000,50.031500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HÁJE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.532000,50.029500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SPOŘILOV", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.480000,50.044500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HOSTIVAŘ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.534500,50.051000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HORNÍ MĚCHOLUPY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.562500,50.041000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "DOLNÍ MĚCHOLUPY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.564000,50.058500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ŠTĚRBOHOLY", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.558000,50.071500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KYJE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.552500,50.093500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ČERNÝ MOST", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.576500,50.107500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LETŇANY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.516000,50.137500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KBELY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.549500,50.132500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ĎÁBLICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.484000,50.146000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ČIMICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.430500,50.142500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SUCHDOL", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.377000,50.139000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SEDLEC", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.395500,50.128000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LYSOLAJE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.372000,50.124500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "NEBUŠICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.327000,50.112500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "RUZYNĚ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.294000,50.088500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ŘEPY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.303000,50.069500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "STODŮLKY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.331500,50.047500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SLIVENEC", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.356000,50.019500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VELKÁ CHUCHLE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.384500,50.010500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ZBRASLAV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.392000,49.972000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LIPENCE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.356000,49.957000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "RADOTÍN", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.354500,49.985500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "LOCHKOV", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.349000,49.999000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ZADNÍ KOPANINA", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.315000,50.008500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ŘEPORYJE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.312000,50.032000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "TŘEBONICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.284500,50.042000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ZLIČÍN", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.284000,50.060000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SOBÍN", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.262500,50.067500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PŘEDNÍ KOPANINA", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.295000,50.118500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "DOLNÍ CHABRY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.446500,50.151000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BŘEZINĚVES", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.484500,50.165000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ČAKOVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.524000,50.153500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "MIŠKOVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.544000,50.162000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "TŘEBORADICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.517500,50.163500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "VINOŘ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.581000,50.145000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "SATALICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.575000,50.125500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HORNÍ POČERNICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.622000,50.114500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "DOLNÍ POČERNICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.582000,50.088500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BĚCHOVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.618000,50.081500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KLÁNOVICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.668000,50.095500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ÚJEZD NAD LESY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.660000,50.073500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KOLODĚJE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.636000,50.060500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "DUBEČ", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.590000,50.060500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "HÁJEK", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.616000,50.048000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KRÁLOVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.638000,50.039000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "UHŘÍNĚVES", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.603000,50.030500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KOLOVRATY", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.627500,50.012500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "BENICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.597500,50.012500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PITKOVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.573500,50.022500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "KŘESLICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.552000,50.025000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PETROVICE", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.557000,50.032000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ÚJEZD U PRŮHONIC", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.539000,50.011000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "ŠEBEROV", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.513500,50.012000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "PÍSNICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.467000,49.992000] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "CHOLUPICE", "tier": 1 },
+      "geometry": { "type": "Point", "coordinates": [14.455500,49.978500] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "TOČNÁ", "tier": 2 },
+      "geometry": { "type": "Point", "coordinates": [14.432500,49.972500] }
+    }
+  ]
+}

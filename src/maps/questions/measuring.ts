@@ -25,10 +25,19 @@ import {
     arcBufferToPoint,
     arcDistance,
     connectToSeparateLines,
+    geoSpatialVoronoi,
     groupObjects,
     holedMask,
     modifyMapData,
 } from "@/maps/geo-utils";
+import {
+    fetchPidBackgroundLines,
+    fetchPidCityDistricts,
+    fetchPidMetroTramLines,
+    fetchPidStopsGeoJSON,
+    fetchPragueBorderGeoJSON,
+    VLTAVA_LINE,
+} from "@/maps/pid";
 import type {
     APILocations,
     HomeGameMeasuringQuestions,
@@ -289,6 +298,50 @@ export const determineMeasuringBoundary = async (
             return turf.combine(
                 turf.featureCollection((question as any).geo.features),
             ).features;
+        case "pid-rail-s": {
+            const [bg, metro, stops] = await Promise.all([
+                fetchPidBackgroundLines(),
+                fetchPidMetroTramLines(),
+                fetchPidStopsGeoJSON(),
+            ]);
+            const railS = bg.features.filter(
+                (f) => f.properties?.mode === "rail_s",
+            );
+            const metroLines = metro.features.filter(
+                (f) => f.properties?.mode === "metro",
+            );
+            const metroStops = stops.features.filter(
+                (f) => f.properties?.is_metro === true,
+            );
+            return [...railS, ...metroLines, ...metroStops];
+        }
+        case "prague-border": {
+            const border = await fetchPragueBorderGeoJSON();
+            return border.features.flatMap((f) => {
+                const line = turf.polygonToLine(f as any);
+                return line.type === "FeatureCollection"
+                    ? line.features
+                    : [line];
+            });
+        }
+        case "pid-district-border": {
+            const districts = await fetchPidCityDistricts();
+            const voronoi = geoSpatialVoronoi(districts);
+            const pt = turf.point([question.lng, question.lat]);
+            const cell = voronoi.features.find((f) =>
+                turf.booleanPointInPolygon(pt, f),
+            );
+            if (!cell) {
+                toast.error("No PID district found at this location");
+                return [turf.multiPolygon([])];
+            }
+            const outline = turf.polygonToLine(cell as any);
+            return outline.type === "FeatureCollection"
+                ? outline.features
+                : [outline];
+        }
+        case "vltava-river":
+            return [VLTAVA_LINE];
         case "aquarium":
         case "zoo":
         case "theme_park":
@@ -377,6 +430,7 @@ export const hiderifyMeasuring = async (question: MeasuringQuestion) => {
             drag: false,
             color: "black",
             collapsed: false,
+            hidden: false,
         });
 
         question.hiderCloser =
