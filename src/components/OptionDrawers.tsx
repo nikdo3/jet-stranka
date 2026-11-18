@@ -37,6 +37,8 @@ import {
     overpassHost,
     pastebinApiKey,
     permanentOverlay,
+    pidOverlayLayers,
+    pidStopModes,
     planningModeEnabled,
     polyGeoJSON,
     questions,
@@ -48,6 +50,7 @@ import {
 } from "@/lib/context";
 import {
     cn,
+    compactHidingZoneForShare,
     compress,
     decompress,
     fetchFromPastebin,
@@ -55,7 +58,7 @@ import {
     uploadToPastebin,
 } from "@/lib/utils";
 import { OVERPASS_HOSTS } from "@/maps/api/constants";
-import { loadPidPraguePreset } from "@/maps/pid";
+import { loadPidPraguePreset, refreshPidStationsAndOverlay } from "@/maps/pid";
 import { questionsSchema } from "@/maps/schema";
 
 import { LatitudeLongitude } from "./LatLngPicker";
@@ -137,19 +140,24 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
             }
         } else if (hidingZoneCompressed !== null) {
             // Modern compressed format
-            decompress(hidingZoneCompressed).then((data) => {
-                try {
-                    loadHidingZone(data);
-                    // Remove hiding zone parameter after initial load
-                    window.history.replaceState(
-                        {},
-                        "",
-                        window.location.pathname,
-                    );
-                } catch (e) {
-                    toast.error(`Invalid hiding zone settings: ${e}`);
-                }
-            });
+            decompress(hidingZoneCompressed)
+                .then((data) => {
+                    try {
+                        loadHidingZone(data);
+                        // Remove hiding zone parameter after initial load
+                        window.history.replaceState(
+                            {},
+                            "",
+                            window.location.pathname,
+                        );
+                    } catch (e) {
+                        toast.error(`Invalid hiding zone settings: ${e}`);
+                    }
+                })
+                .catch((e) => {
+                    console.error("Failed to decompress hiding zone:", e);
+                    toast.error(`Failed to decompress hiding zone: ${e}`);
+                });
         } else if (pastebinId !== null) {
             fetchFromPastebin(pastebinId)
                 .then((data) => {
@@ -271,6 +279,25 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                 }
             }
 
+            const isPidPreset =
+                geojson.pidPreset === true ||
+                (geojson.properties?.osm_id === 435514 &&
+                    !geojson.customStations);
+
+            if (isPidPreset) {
+                if (Array.isArray(geojson.pidOverlayLayers)) {
+                    pidOverlayLayers.set(geojson.pidOverlayLayers);
+                }
+                if (Array.isArray(geojson.pidStopModes)) {
+                    pidStopModes.set(geojson.pidStopModes);
+                }
+                refreshPidStationsAndOverlay().then(() => {
+                    if (Array.isArray(geojson.pidStopModes)) {
+                        pidStopModes.set(geojson.pidStopModes);
+                    }
+                });
+            }
+
             if (
                 geojson.disabledStations !== null &&
                 geojson.disabledStations.constructor === Array
@@ -303,7 +330,7 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
 
             if (geojson.permanentOverlay) {
                 permanentOverlay.set(geojson.permanentOverlay);
-            } else {
+            } else if (!isPidPreset) {
                 permanentOverlay.set(null);
             }
 
@@ -389,7 +416,12 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
             <Button
                 className="shadow-md"
                 onClick={async () => {
-                    const hidingZoneString = JSON.stringify($hidingZone);
+                    const zoneToShare = compactHidingZoneForShare(
+                        $hidingZone,
+                        pidStopModes.get(),
+                        pidOverlayLayers.get(),
+                    );
+                    const hidingZoneString = JSON.stringify(zoneToShare);
                     let compressedData;
                     try {
                         compressedData = await compress(hidingZoneString);
@@ -402,7 +434,7 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                     const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                     let shareUrl = `${baseUrl}?${HIDING_ZONE_COMPRESSED_URL_PARAM}=${compressedData}`;
 
-                    if ($alwaysUsePastebin || shareUrl.length > 2000) {
+                    if ($alwaysUsePastebin || shareUrl.length > 16000) {
                         if ($pastebinApiKey) {
                             try {
                                 toast.info(
@@ -421,13 +453,19 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                                 );
                             } catch (error) {
                                 console.error("Pastebin upload failed:", error);
-                                toast.warning(
-                                    "Pastebin upload failed, falling back to file download.",
-                                );
-                                saveToFile();
-                                return;
+                                if (shareUrl.length <= 32000) {
+                                    toast.warning(
+                                        "Pastebin upload failed, falling back to direct link.",
+                                    );
+                                } else {
+                                    toast.warning(
+                                        "Pastebin upload failed, falling back to file download.",
+                                    );
+                                    saveToFile();
+                                    return;
+                                }
                             }
-                        } else {
+                        } else if (shareUrl.length > 32000) {
                             toast.info(
                                 "Data is too large for a URL — saving to file instead.",
                             );

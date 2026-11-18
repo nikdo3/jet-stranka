@@ -12,6 +12,7 @@ import osmtogeojson from "osmtogeojson";
 import {
     customStations,
     defaultUnit,
+    displayHidingZonesOptions,
     hidingRadius,
     hidingRadiusUnits,
     includeDefaultStations,
@@ -20,10 +21,26 @@ import {
     mapGeoLocation,
     permanentOverlay,
     pidOverlayLayers,
+    pidPresetVersion,
+    pidStopModes,
     polyGeoJSON,
     useCustomStations,
 } from "@/lib/context";
-import type { CustomStation, OpenStreetMap } from "@/maps/api/types";
+import type {
+    CustomStation,
+    OpenStreetMap,
+    PidStopMode,
+} from "@/maps/api/types";
+
+export const PID_PRESET_VERSION = 2;
+
+const PID_ALL_MODES: PidStopMode[] = ["metro", "tram", "bus", "rail", "ferry"];
+const PID_DEFAULT_HIDING_ZONE_OPTIONS = [
+    "[railway=station]",
+    "[railway=halt]",
+    "[railway=tram_stop]",
+    "[highway=bus_stop]",
+];
 
 export const PRAGUE_MAP_GEO_LOCATION: OpenStreetMap = {
     type: "Feature",
@@ -179,11 +196,30 @@ export async function buildPidOverlay(
     };
 }
 
-export async function loadPidPraguePreset(): Promise<void> {
-    defaultUnit.set("kilometers");
-    hidingRadius.set(0.5);
-    hidingRadiusUnits.set("kilometers");
+export function filterPidStationsByModes(
+    stations: CustomStation[],
+    modes: PidStopMode[],
+): CustomStation[] {
+    const modeSet = new Set(modes);
+    return stations.filter((s) => {
+        const hasModeFlags =
+            typeof s.is_metro === "boolean" ||
+            typeof s.is_tram === "boolean" ||
+            typeof s.is_bus === "boolean" ||
+            typeof s.is_rail === "boolean" ||
+            typeof s.is_ferry === "boolean";
+        if (!hasModeFlags) return true;
+        return (
+            (s.is_metro === true && modeSet.has("metro")) ||
+            (s.is_tram === true && modeSet.has("tram")) ||
+            (s.is_bus === true && modeSet.has("bus")) ||
+            (s.is_rail === true && modeSet.has("rail")) ||
+            (s.is_ferry === true && modeSet.has("ferry"))
+        );
+    });
+}
 
+export async function refreshPidStationsAndOverlay(): Promise<void> {
     const stopsFC = await fetchPidStopsGeoJSON();
     const stations: CustomStation[] = stopsFC.features
         .filter((f) => f.geometry?.type === "Point")
@@ -199,19 +235,38 @@ export async function loadPidPraguePreset(): Promise<void> {
             };
             if (Array.isArray(props.lines)) station.lines = props.lines;
             if (typeof props.zone === "string") station.zone = props.zone;
+            if (typeof props.category === "string")
+                station.category = props.category;
             if (typeof props.is_metro === "boolean")
                 station.is_metro = props.is_metro;
             if (typeof props.is_tram === "boolean")
                 station.is_tram = props.is_tram;
+            if (typeof props.is_bus === "boolean")
+                station.is_bus = props.is_bus;
+            if (typeof props.is_rail === "boolean")
+                station.is_rail = props.is_rail;
+            if (typeof props.is_ferry === "boolean")
+                station.is_ferry = props.is_ferry;
             return station;
         });
 
     customStations.set(stations);
     useCustomStations.set(true);
     includeDefaultStations.set(false);
+    pidStopModes.set([...PID_ALL_MODES]);
+    displayHidingZonesOptions.set([...PID_DEFAULT_HIDING_ZONE_OPTIONS]);
+    pidPresetVersion.set(PID_PRESET_VERSION);
 
     const overlay = await buildPidOverlay(pidOverlayLayers.get());
     permanentOverlay.set(overlay);
+}
+
+export async function loadPidPraguePreset(): Promise<void> {
+    defaultUnit.set("kilometers");
+    hidingRadius.set(0.5);
+    hidingRadiusUnits.set("kilometers");
+
+    await refreshPidStationsAndOverlay();
 
     mapGeoLocation.set(PRAGUE_MAP_GEO_LOCATION);
     polyGeoJSON.set(null);

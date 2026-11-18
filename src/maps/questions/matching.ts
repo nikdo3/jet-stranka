@@ -11,16 +11,21 @@ import osmtogeojson from "osmtogeojson";
 import { toast } from "react-toastify";
 
 import {
+    customStations,
+    disabledStations,
     hiderMode,
     mapGeoJSON,
     mapGeoLocation,
+    pidStopModes,
     polyGeoJSON,
+    useCustomStations,
 } from "@/lib/context";
 import {
     findAdminBoundary,
     findPlacesInZone,
     LOCATION_FIRST_TAG,
     nearestToQuestion,
+    normalizeToStationFeatures,
     prettifyLocation,
     trainLineNodeFinder,
 } from "@/maps/api";
@@ -30,6 +35,7 @@ import {
     fetchPidCityDistricts,
     fetchPidStopsGeoJSON,
     fetchPidZones,
+    filterPidStationsByModes,
     getVltavaBankPolygon,
 } from "@/maps/pid";
 import type {
@@ -400,13 +406,29 @@ export const hiderifyMatching = async (question: MatchingQuestion) => {
         ]);
         const seekerPoint = turf.point([question.lng, question.lat]);
 
-        const places = osmtogeojson(
-            await findPlacesInZone(
-                "[railway=station]",
-                "Finding train stations. This may take a while. Do not press any buttons while this is processing. Don't worry, it will be cached.",
-                "node",
-            ),
-        ) as FeatureCollection<Point>;
+        let places: FeatureCollection<Point> | null = null;
+        if (useCustomStations.get() && customStations.get().length > 0) {
+            const disabledSet = new Set(disabledStations.get());
+            const filtered = filterPidStationsByModes(
+                customStations.get(),
+                pidStopModes.get(),
+            ).filter((s) => !disabledSet.has(s.id));
+            if (filtered.length > 0) {
+                places = normalizeToStationFeatures(
+                    filtered,
+                ) as FeatureCollection<Point>;
+            }
+        }
+
+        if (!places) {
+            places = osmtogeojson(
+                await findPlacesInZone(
+                    "[railway=station]",
+                    "Finding train stations. This may take a while. Do not press any buttons while this is processing. Don't worry, it will be cached.",
+                    "node",
+                ),
+            ) as FeatureCollection<Point>;
+        }
 
         const nearestHiderTrainStation = turf.nearestPoint(hiderPoint, places);
         const nearestSeekerTrainStation = turf.nearestPoint(
@@ -415,16 +437,29 @@ export const hiderifyMatching = async (question: MatchingQuestion) => {
         );
 
         if (question.type === "same-train-line") {
-            const nodes = await trainLineNodeFinder(
-                nearestSeekerTrainStation.properties.id,
-            );
+            const seekerLines = nearestSeekerTrainStation.properties?.lines;
+            const hiderLines = nearestHiderTrainStation.properties?.lines;
+            if (Array.isArray(seekerLines) && Array.isArray(hiderLines)) {
+                question.same = seekerLines.some((l: string) =>
+                    hiderLines.includes(l),
+                );
+            } else if (
+                String(nearestSeekerTrainStation.properties?.id || "").includes(
+                    "/",
+                ) &&
+                String(nearestHiderTrainStation.properties?.id || "").includes(
+                    "/",
+                )
+            ) {
+                const nodes = await trainLineNodeFinder(
+                    nearestSeekerTrainStation.properties.id,
+                );
 
-            const hiderId = parseInt(
-                nearestHiderTrainStation.properties.id.split("/")[1],
-            );
+                const hiderId = parseInt(
+                    nearestHiderTrainStation.properties.id.split("/")[1],
+                );
 
-            if (nodes.includes(hiderId)) {
-                question.same = true;
+                question.same = nodes.includes(hiderId);
             } else {
                 question.same = false;
             }

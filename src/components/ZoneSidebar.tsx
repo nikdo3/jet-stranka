@@ -31,6 +31,7 @@ import {
     isLoading,
     leafletMapContext,
     mergeDuplicates as mergeDuplicatesAtom,
+    pidStopModes,
     planningModeEnabled,
     questionFinishedMapData,
     questions,
@@ -51,6 +52,7 @@ import {
     type StationPlace,
     trainLineNodeFinder,
 } from "@/maps/api";
+import type { PidStopMode } from "@/maps/api/types";
 import {
     arcDistance,
     extractStationLabel,
@@ -61,7 +63,7 @@ import {
     mergeDuplicateStation,
     safeUnion,
 } from "@/maps/geo-utils";
-import { loadPidPraguePreset } from "@/maps/pid";
+import { filterPidStationsByModes, loadPidPraguePreset } from "@/maps/pid";
 
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -84,6 +86,14 @@ function _previewText(count: number) {
     return `${count} custom station${count === 1 ? "" : "s"} imported`;
 }
 
+const PID_MODE_OPTIONS: { mode: PidStopMode; label: string }[] = [
+    { mode: "metro", label: "Metro" },
+    { mode: "tram", label: "Tramvaje" },
+    { mode: "bus", label: "Autobusy a trolejbusy" },
+    { mode: "rail", label: "Vlaky (S)" },
+    { mode: "ferry", label: "Přívozy" },
+];
+
 let buttonJustClicked = false;
 
 export const ZoneSidebar = () => {
@@ -101,6 +111,11 @@ export const ZoneSidebar = () => {
     const mergeDuplicates = useStore(mergeDuplicatesAtom);
     const includeDefaultStations = useStore(includeDefaultStationsAtom);
     const $customStations = useStore(customStationsAtom);
+    const $pidStopModes = useStore(pidStopModes);
+    const filteredCustomStations = filterPidStationsByModes(
+        $customStations,
+        $pidStopModes,
+    );
     const [hidingZoneModeStationID, setHidingZoneModeStationID] =
         useState<string>("");
     const [stationSearch, setStationSearch] = useState<string>("");
@@ -108,6 +123,17 @@ export const ZoneSidebar = () => {
     const setStations = trainStations.set;
     const sidebarRef = useRef<HTMLDivElement>(null);
     const [importUrl, setImportUrl] = useState("");
+
+    const togglePidMode = (mode: PidStopMode, checked: boolean) => {
+        const current = pidStopModes.get();
+        if (checked) {
+            if (!current.includes(mode)) {
+                pidStopModes.set([...current, mode]);
+            }
+        } else {
+            pidStopModes.set(current.filter((m) => m !== mode));
+        }
+    };
 
     const removeHidingZones = () => {
         if (!map) return;
@@ -147,20 +173,22 @@ export const ZoneSidebar = () => {
                   }
                 : undefined,
             pointToLayer(geoJsonPoint, latlng) {
-                const marker = L.marker(latlng, {
-                    icon: L.divIcon({
-                        html: `<div class="text-black bg-opacity-0"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" width="1em" height="1em" xmlns="http://www.w3.org/2000/svg"><path d="M96 0C43 0 0 43 0 96L0 352c0 48 35.2 87.7 81.1 94.9l-46 46C28.1 499.9 33.1 512 43 512l39.7 0c8.5 0 16.6-3.4 22.6-9.4L160 448l128 0 54.6 54.6c6 6 14.1 9.4 22.6 9.4l39.7 0c10 0 15-12.1 7.9-19.1l-46-46c46-7.1 81.1-46.9 81.1-94.9l0-256c0-53-43-96-96-96L96 0zM64 96c0-17.7 14.3-32 32-32l256 0c17.7 0 32 14.3 32 32l0 96c0 17.7-14.3 32-32 32L96 224c-17.7 0-32-14.3-32-32l0-96zM224 288a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"></path></svg></div>`,
-                        className: "",
-                    }),
+                const marker = L.circleMarker(latlng, {
+                    radius: 5,
+                    color: "#14532D",
+                    fillColor: "#22C55E",
+                    fillOpacity: 0.9,
+                    weight: 1.5,
                 });
 
-                marker.bindPopup(
-                    `<b>${
-                        extractStationName(geoJsonPoint) || "No Name Found"
-                    } (${lngLatToText(
-                        geoJsonPoint.geometry.coordinates as [number, number],
-                    )})</b>`,
+                const stationName =
+                    extractStationName(geoJsonPoint) || "No Name Found";
+                const coords = lngLatToText(
+                    geoJsonPoint.geometry.coordinates as [number, number],
                 );
+
+                marker.bindPopup(`<b>${stationName} (${coords})</b>`);
+                marker.bindTooltip(stationName);
 
                 return marker;
             },
@@ -197,7 +225,7 @@ export const ZoneSidebar = () => {
                 if (!needsDefault) {
                     // Custom only
                     places = normalizeToStationFeatures(
-                        $customStations,
+                        filteredCustomStations,
                     ).features.map((f) => ({
                         type: "Feature",
                         geometry: f.geometry,
@@ -224,11 +252,11 @@ export const ZoneSidebar = () => {
 
                     if (
                         useCustomStations &&
-                        $customStations.length > 0 &&
+                        filteredCustomStations.length > 0 &&
                         includeDefaultStations
                     ) {
                         const customFeatures = normalizeToStationFeatures(
-                            $customStations,
+                            filteredCustomStations,
                         ).features.map(
                             (f) =>
                                 ({
@@ -273,15 +301,23 @@ export const ZoneSidebar = () => {
 
             const unionized = safeUnion(
                 turf.simplify($questionFinishedMapData, {
-                    tolerance: 0.001,
+                    tolerance: 0.0002,
                 }),
             );
+
+            const hasUnionPolygon =
+                unionized &&
+                (unionized as any).geometry &&
+                (((unionized as any).geometry.type === "Polygon" &&
+                    (unionized as any).geometry.coordinates?.length > 0) ||
+                    ((unionized as any).geometry.type === "MultiPolygon" &&
+                        (unionized as any).geometry.coordinates?.length > 0));
 
             let circles = places
                 .map((place) => {
                     const center = turf.getCoord(place);
                     const circle = turf.circle(center, safeRadius, {
-                        steps: 32,
+                        steps: 24,
                         units: $hidingRadiusUnits,
                         properties: place,
                     });
@@ -289,7 +325,12 @@ export const ZoneSidebar = () => {
                     return circle;
                 })
                 .filter((circle) => {
-                    return !turf.booleanWithin(circle, unionized);
+                    if (!hasUnionPolygon) return true;
+                    const center = turf.getCoord(circle.properties);
+                    return (
+                        !turf.booleanPointInPolygon(center, unionized as any) ||
+                        !turf.booleanWithin(circle, unionized as any)
+                    );
                 });
 
             for (const question of questions.get()) {
@@ -489,6 +530,7 @@ export const ZoneSidebar = () => {
         useCustomStations,
         includeDefaultStations,
         $customStations,
+        $pidStopModes,
         mergeDuplicates,
     ]);
 
@@ -626,7 +668,7 @@ export const ZoneSidebar = () => {
                                                     loadPidPraguePreset()
                                                 }
                                             >
-                                                Načíst PID Praha zastávky (286)
+                                                Načíst PID Praha zastávky
                                             </Button>
                                             <div className="flex gap-2">
                                                 <Input
@@ -782,6 +824,56 @@ export const ZoneSidebar = () => {
                                                     }
                                                     disabled={$isLoading}
                                                 />
+                                            </div>
+                                            <div className="flex flex-col gap-1.5 rounded-md border border-border/60 bg-background/40 p-2.5">
+                                                <div className="flex items-center justify-between">
+                                                    <Label className="font-semibold font-poppins text-xs">
+                                                        Povolené druhy zastávek
+                                                        PID
+                                                    </Label>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {
+                                                            filteredCustomStations.length
+                                                        }{" "}
+                                                        /{" "}
+                                                        {$customStations.length}
+                                                    </span>
+                                                </div>
+                                                {PID_MODE_OPTIONS.map(
+                                                    ({ mode, label }) => {
+                                                        const id = `pid-mode-${mode}`;
+                                                        return (
+                                                            <div
+                                                                key={mode}
+                                                                className="flex flex-row items-center justify-between w-full"
+                                                            >
+                                                                <label
+                                                                    htmlFor={id}
+                                                                    className="text-sm font-normal cursor-pointer select-none"
+                                                                >
+                                                                    {label}
+                                                                </label>
+                                                                <Checkbox
+                                                                    id={id}
+                                                                    checked={$pidStopModes.includes(
+                                                                        mode,
+                                                                    )}
+                                                                    onCheckedChange={(
+                                                                        v,
+                                                                    ) =>
+                                                                        togglePidMode(
+                                                                            mode,
+                                                                            !!v,
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        $isLoading
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        );
+                                                    },
+                                                )}
                                             </div>
                                             {$customStations.length > 0 && (
                                                 <div className="text-sm text-gray-300">

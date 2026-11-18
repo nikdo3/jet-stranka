@@ -91,7 +91,13 @@ export async function fetchFromPastebin(pasteId: string): Promise<string> {
         response = await fetch(PASTEBIN_API_RAW_URL + pasteId);
     } catch {
         // CORS error; happens if the paste is not owned by a Pastebin Pro user
-        response = await fetch(PASTEBIN_API_RAW_URL_PROXIED + pasteId);
+        const rawUrl = PASTEBIN_API_RAW_URL + pasteId;
+        const targetUrl = PASTEBIN_API_RAW_URL_PROXIED.startsWith(
+            "https://corsproxy.io/?url=",
+        )
+            ? "https://corsproxy.io/?url=" + encodeURIComponent(rawUrl)
+            : PASTEBIN_API_RAW_URL_PROXIED + pasteId;
+        response = await fetch(targetUrl);
     }
 
     if (!response.ok) {
@@ -101,6 +107,55 @@ export async function fetchFromPastebin(pasteId: string): Promise<string> {
     }
 
     return response.text();
+}
+
+/**
+ * Strips heavy static preset fields (like ~800 KB Prague PID stations and overlays)
+ * and empty arrays to keep share URLs well within reasonable limits.
+ */
+export function compactHidingZoneForShare(
+    zone: any,
+    pidStopModes?: string[],
+    pidOverlayLayers?: string[],
+): any {
+    if (!zone || typeof zone !== "object") return zone;
+
+    const compacted = { ...zone };
+
+    if (
+        compacted.properties?.osm_id === 435514 ||
+        compacted.pidPreset === true
+    ) {
+        delete compacted.customStations;
+        delete compacted.permanentOverlay;
+        compacted.pidPreset = true;
+        if (pidStopModes && pidStopModes.length > 0) {
+            compacted.pidStopModes = pidStopModes;
+        }
+        if (pidOverlayLayers && pidOverlayLayers.length > 0) {
+            compacted.pidOverlayLayers = pidOverlayLayers;
+        }
+    }
+
+    if (Array.isArray(compacted.presets) && compacted.presets.length === 0) {
+        delete compacted.presets;
+    }
+    if (
+        compacted.properties &&
+        Array.isArray(compacted.properties.presets) &&
+        compacted.properties.presets.length === 0
+    ) {
+        compacted.properties = { ...compacted.properties };
+        delete compacted.properties.presets;
+    }
+    if (
+        Array.isArray(compacted.alternateLocations) &&
+        compacted.alternateLocations.length === 0
+    ) {
+        delete compacted.alternateLocations;
+    }
+
+    return compacted;
 }
 
 /**

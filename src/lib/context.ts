@@ -7,6 +7,7 @@ import type {
     AdditionalMapGeoLocations,
     CustomStation,
     OpenStreetMap,
+    PidStopMode,
     StationCircle,
 } from "@/maps/api";
 import { extractStationLabel } from "@/maps/geo-utils";
@@ -110,7 +111,12 @@ export const displayHidingZones = persistentAtom<boolean>(
 );
 export const displayHidingZonesOptions = persistentAtom<string[]>(
     "displayHidingZonesOptions",
-    ["[railway=station]"],
+    [
+        "[railway=station]",
+        "[railway=halt]",
+        "[railway=tram_stop]",
+        "[highway=bus_stop]",
+    ],
     {
         encode: JSON.stringify,
         decode: JSON.parse,
@@ -190,6 +196,18 @@ export const pidOverlayLayers = persistentAtom<string[]>(
         decode: JSON.parse,
     },
 );
+export const pidStopModes = persistentAtom<PidStopMode[]>(
+    "pidStopModes",
+    ["metro", "tram", "bus", "rail", "ferry"],
+    {
+        encode: JSON.stringify,
+        decode: JSON.parse,
+    },
+);
+export const pidPresetVersion = persistentAtom<number>("pidPresetVersion", 0, {
+    encode: JSON.stringify,
+    decode: JSON.parse,
+});
 export const disabledStations = persistentAtom<string[]>(
     "disabledStations",
     [],

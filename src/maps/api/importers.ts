@@ -7,6 +7,52 @@ import type {
     StationPlaceProperties,
 } from "./types";
 
+const PID_BOOLEAN_FIELDS = [
+    "is_metro",
+    "is_tram",
+    "is_bus",
+    "is_rail",
+    "is_ferry",
+] as const;
+
+const STATION_META_FIELDS = [
+    "lines",
+    "zone",
+    "category",
+    ...PID_BOOLEAN_FIELDS,
+] as const;
+
+function parseOptionalBoolean(value: string | undefined): boolean | undefined {
+    if (value === undefined) return undefined;
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "true" || normalized === "1" || normalized === "yes")
+        return true;
+    if (normalized === "false" || normalized === "0" || normalized === "no")
+        return false;
+    return undefined;
+}
+
+function parseOptionalLines(value: string | undefined): string[] | undefined {
+    if (!value) return undefined;
+    const trimmed = value.trim();
+    if (!trimmed) return undefined;
+    if (trimmed.startsWith("[")) {
+        try {
+            const parsed = JSON.parse(trimmed);
+            if (Array.isArray(parsed)) {
+                return parsed.map((v) => String(v));
+            }
+        } catch {
+            // Fall through to delimiter split
+        }
+    }
+    const parts = trimmed
+        .split(/[;,]/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+    return parts.length > 0 ? parts : undefined;
+}
+
 function parseCSV(text: string): CustomStation[] {
     const { data, errors } = Papa.parse<Record<string, string>>(text, {
         header: true,
@@ -51,7 +97,16 @@ function parseCSV(text: string): CustomStation[] {
         const name = row[nameKey];
         if (!name) continue;
         const id = idKey && row[idKey] ? row[idKey] : `${lat},${lng}`;
-        stations.push({ id, name, lat, lng });
+        const station: CustomStation = { id, name, lat, lng };
+        const lines = parseOptionalLines(row.lines);
+        if (lines) station.lines = lines;
+        if (row.zone?.trim()) station.zone = row.zone.trim();
+        if (row.category?.trim()) station.category = row.category.trim();
+        for (const field of PID_BOOLEAN_FIELDS) {
+            const parsed = parseOptionalBoolean(row[field]);
+            if (parsed !== undefined) station[field] = parsed;
+        }
+        stations.push(station);
     }
     return stations;
 }
@@ -64,14 +119,22 @@ function parseGeoJSON(obj: any): CustomStation[] {
         if (!isFinite(lat) || !isFinite(lng)) return;
         const props: any = f.properties || {};
         const name = props["name:en"] || props.name || props.title;
-        const id = props.id || props.osm_id || props["@id"] || `${lat},${lng}`;
+        const id =
+            props.id ||
+            props.node_id ||
+            props.osm_id ||
+            props["@id"] ||
+            `${lat},${lng}`;
         const station: CustomStation = { id: String(id), name, lat, lng };
         if (Array.isArray(props.lines)) station.lines = props.lines;
         if (typeof props.zone === "string") station.zone = props.zone;
-        if (typeof props.is_metro === "boolean")
-            station.is_metro = props.is_metro;
-        if (typeof props.is_tram === "boolean")
-            station.is_tram = props.is_tram;
+        if (typeof props.category === "string")
+            station.category = props.category;
+        for (const field of PID_BOOLEAN_FIELDS) {
+            if (typeof props[field] === "boolean") {
+                station[field] = props[field];
+            }
+        }
         stations.push(station);
     };
     if (obj.type === "FeatureCollection") {
@@ -160,10 +223,9 @@ export function normalizeToStationFeatures(
     // Return GeoJSON FeatureCollection of Points carrying properties { id, name }
     const features: StationPlace[] = stations.map((s) => {
         const properties: StationPlaceProperties = { id: s.id, name: s.name };
-        if (s.lines !== undefined) properties.lines = s.lines;
-        if (s.zone !== undefined) properties.zone = s.zone;
-        if (s.is_metro !== undefined) properties.is_metro = s.is_metro;
-        if (s.is_tram !== undefined) properties.is_tram = s.is_tram;
+        for (const field of STATION_META_FIELDS) {
+            if (s[field] !== undefined) properties[field] = s[field];
+        }
         return {
             type: "Feature",
             geometry: { type: "Point", coordinates: [s.lng, s.lat] },

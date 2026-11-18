@@ -2,10 +2,15 @@ import fs from "node:fs";
 import path from "node:path";
 
 import * as turf from "@turf/turf";
+// @ts-expect-error d3-geo-voronoi has no bundled TypeScript declarations
+import { geoVoronoi } from "d3-geo-voronoi";
 import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
-import { getVltavaBankPolygon } from "../src/maps/pid";
+import {
+    filterPidStationsByModes,
+    getVltavaBankPolygon,
+} from "../src/maps/pid";
 
 const pidDir = path.resolve(__dirname, "../public/pid");
 
@@ -24,7 +29,19 @@ describe("PID Prague data & helpers", () => {
             fs.readFileSync(path.join(pidDir, "pid_stops_p0b.geojson"), "utf8"),
         );
         expect(stops.type).toBe("FeatureCollection");
-        expect(stops.features.length).toBe(286);
+        expect(stops.features.length).toBeGreaterThan(1300);
+        expect(
+            stops.features.some((f: any) => f.properties?.is_metro === true),
+        ).toBe(true);
+        expect(
+            stops.features.some((f: any) => f.properties?.is_tram === true),
+        ).toBe(true);
+        expect(
+            stops.features.some((f: any) => f.properties?.is_bus === true),
+        ).toBe(true);
+        expect(
+            stops.features.some((f: any) => f.properties?.is_rail === true),
+        ).toBe(true);
 
         const zones = JSON.parse(
             fs.readFileSync(path.join(pidDir, "pid_zones_p0b.geojson"), "utf8"),
@@ -56,12 +73,83 @@ describe("PID Prague data & helpers", () => {
             "utf8",
         );
         const stations = parseCustomStationsFromText(raw, "application/json");
-        expect(stations.length).toBe(286);
+        expect(stations.length).toBeGreaterThan(1300);
 
         const metroStation = stations.find((s) => s.is_metro === true);
         expect(metroStation).toBeDefined();
         expect(Array.isArray(metroStation?.lines)).toBe(true);
         expect(metroStation?.lines?.length).toBeGreaterThan(0);
         expect(typeof metroStation?.zone).toBe("string");
+        expect(typeof metroStation?.category).toBe("string");
+        expect(typeof metroStation?.is_bus).toBe("boolean");
+        expect(typeof metroStation?.is_rail).toBe("boolean");
+        expect(typeof metroStation?.is_ferry).toBe("boolean");
+
+        const csv = [
+            "id,name,lat,lng,zone,category,lines,is_metro,is_tram,is_bus,is_rail,is_ferry",
+            '1,Muzeum,50.0799,14.4307,P,metro_station,"A;C",true,false,false,false,false',
+        ].join("\n");
+        const csvStations = parseCustomStationsFromText(csv, "text/csv");
+        expect(csvStations).toHaveLength(1);
+        expect(csvStations[0]).toMatchObject({
+            id: "1",
+            name: "Muzeum",
+            zone: "P",
+            category: "metro_station",
+            lines: ["A", "C"],
+            is_metro: true,
+            is_tram: false,
+            is_bus: false,
+            is_rail: false,
+            is_ferry: false,
+        });
+    });
+
+    it("filterPidStationsByModes filters bus vs metro/tram while preserving custom stations without flags", () => {
+        const raw = fs.readFileSync(
+            path.join(pidDir, "pid_stops_p0b.geojson"),
+            "utf8",
+        );
+        const pidStations = parseCustomStationsFromText(raw, "application/json");
+        const customNoFlags = {
+            id: "custom-1",
+            name: "Custom Stop",
+            lat: 50.08,
+            lng: 14.42,
+        };
+        const all = [...pidStations, customNoFlags];
+
+        const metroTramOnly = filterPidStationsByModes(all, ["metro", "tram"]);
+        expect(metroTramOnly.some((s) => s.id === "custom-1")).toBe(true);
+        expect(
+            metroTramOnly.every(
+                (s) =>
+                    s.id === "custom-1" ||
+                    s.is_metro === true ||
+                    s.is_tram === true,
+            ),
+        ).toBe(true);
+        expect(
+            metroTramOnly.some(
+                (s) => s.is_bus === true && !s.is_metro && !s.is_tram,
+            ),
+        ).toBe(false);
+
+        const busOnly = filterPidStationsByModes(all, ["bus"]);
+        expect(busOnly.some((s) => s.id === "custom-1")).toBe(true);
+        expect(
+            busOnly.every((s) => s.id === "custom-1" || s.is_bus === true),
+        ).toBe(true);
+        expect(busOnly.length).toBeGreaterThan(500);
+    });
+
+    it("computes d3-geo-voronoi over all Prague stops without errors", () => {
+        const stops = JSON.parse(
+            fs.readFileSync(path.join(pidDir, "pid_stops_p0b.geojson"), "utf8"),
+        );
+        const voronoi = geoVoronoi(stops);
+        const polygons = voronoi.polygons();
+        expect(polygons.type).toBe("FeatureCollection");
+        expect(polygons.features.length).toBe(stops.features.length);
     });
 });

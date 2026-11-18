@@ -46,6 +46,8 @@ export enum CacheType {
     PERMANENT_CACHE = "jlhs-map-generator-permanent-cache",
 }
 
+export type PidStopMode = "metro" | "tram" | "bus" | "rail" | "ferry";
+
 export interface CustomStation {
     id: string;
     name?: string;
@@ -53,8 +55,12 @@ export interface CustomStation {
     lng: number;
     lines?: string[];
     zone?: string;
+    category?: string;
     is_metro?: boolean;
     is_tram?: boolean;
+    is_bus?: boolean;
+    is_rail?: boolean;
+    is_ferry?: boolean;
 }
 
 export interface StationPlaceProperties {

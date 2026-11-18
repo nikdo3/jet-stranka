@@ -216,7 +216,7 @@ export const trainLineNodeFinder = async (node: string): Promise<number[]> => {
 [out:json];
 node(${nodeId});
 wr(bn);
-rel(bn)["route"~"train|subway|tram|light_rail|monorail"];
+rel(bn)["route"~"^(subway|tram|train|light_rail|monorail|bus|trolleybus|ferry)$"];
 out tags;
 `;
     const tagData = await getOverpassData(tagQuery, "Finding train line...");

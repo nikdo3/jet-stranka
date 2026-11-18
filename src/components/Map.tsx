@@ -23,6 +23,7 @@ import {
     mapGeoJSON,
     mapGeoLocation,
     permanentOverlay,
+    pidPresetVersion,
     planningModeEnabled,
     polyGeoJSON,
     questionFinishedMapData,
@@ -34,7 +35,7 @@ import { cn } from "@/lib/utils";
 import { applyQuestionsToMapGeoData, holedMask } from "@/maps";
 import { hiderifyQuestion } from "@/maps";
 import { clearCache, determineMapBoundaries } from "@/maps/api";
-import { loadPidPraguePreset } from "@/maps/pid";
+import { PID_PRESET_VERSION, refreshPidStationsAndOverlay } from "@/maps/pid";
 
 import { DraggableMarkers } from "./DraggableMarkers";
 import { LeafletFullScreenButton } from "./LeafletFullScreenButton";
@@ -421,11 +422,12 @@ export const Map = ({ className }: { className?: string }) => {
     useEffect(() => {
         if (!map) return;
         if (
-            mapGeoLocation.get().properties.osm_id === 435514 &&
-            permanentOverlay.get() === null &&
-            customStations.get().length === 0
+            mapGeoLocation.get()?.properties?.osm_id === 435514 &&
+            (pidPresetVersion.get() < PID_PRESET_VERSION ||
+                customStations.get().length < 1000 ||
+                permanentOverlay.get() === null)
         ) {
-            loadPidPraguePreset().catch((err) => {
+            refreshPidStationsAndOverlay().catch((err) => {
                 console.error("Failed to auto-load Prague PID preset:", err);
                 toast.error("Nepodařilo se načíst výchozí PID Praha data");
             });
@@ -529,21 +531,45 @@ export const Map = ({ className }: { className?: string }) => {
                               fillOpacity: 0.95,
                               weight: 2,
                           }
-                        : props.category === "tram_stop"
+                        : props.is_rail
                           ? {
-                                radius: 3,
-                                color: "#334155",
-                                fillColor: "#FFFFFF",
-                                fillOpacity: 0.9,
+                                radius: 4,
+                                color: "#0F172A",
+                                fillColor: "#38BDF8",
+                                fillOpacity: 0.95,
                                 weight: 1.5,
                             }
-                          : {
-                                radius: 2.5,
-                                color: "#64748B",
-                                fillColor: "#94A3B8",
-                                fillOpacity: 0.7,
-                                weight: 1,
-                            };
+                          : props.is_tram || props.category === "tram_stop"
+                            ? {
+                                  radius: 3,
+                                  color: "#7F1D1D",
+                                  fillColor: "#F87171",
+                                  fillOpacity: 0.9,
+                                  weight: 1.5,
+                              }
+                            : props.is_ferry
+                              ? {
+                                    radius: 3.5,
+                                    color: "#0C4A6E",
+                                    fillColor: "#2DD4BF",
+                                    fillOpacity: 0.9,
+                                    weight: 1.5,
+                                }
+                              : props.is_bus
+                                ? {
+                                      radius: 2,
+                                      color: "#1E293B",
+                                      fillColor: "#60A5FA",
+                                      fillOpacity: 0.75,
+                                      weight: 1,
+                                  }
+                                : {
+                                      radius: 2.5,
+                                      color: "#64748B",
+                                      fillColor: "#94A3B8",
+                                      fillOpacity: 0.7,
+                                      weight: 1,
+                                  };
 
                     const marker = L.circleMarker(latlng, {
                         ...style,
