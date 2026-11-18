@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
     compactHidingZoneForShare,
@@ -6,6 +6,7 @@ import {
     decodeShortSharePayload,
     decompress,
     encodeShortSharePayload,
+    shortenShareUrl,
 } from "@/lib/utils";
 
 describe("compactHidingZoneForShare", () => {
@@ -334,5 +335,59 @@ describe("encodeShortSharePayload and decodeShortSharePayload", () => {
         expect(decoded.questions).toEqual([
             { id: "b1", text: "Are you in Brno?" },
         ]);
+    });
+});
+
+describe("shortenShareUrl", () => {
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    it("returns null immediately if url is empty or exceeds 4500 characters", async () => {
+        expect(await shortenShareUrl("")).toBeNull();
+        const tooLong = "https://example.com/?" + "a".repeat(4501);
+        expect(await shortenShareUrl(tooLong)).toBeNull();
+    });
+
+    it("returns https://is.gd/... when is.gd succeeds", async () => {
+        const fetchMock = vi.fn().mockResolvedValue({
+            ok: true,
+            json: async () => ({ shorturl: "https://is.gd/abc123" }),
+        });
+        vi.stubGlobal("fetch", fetchMock);
+
+        const result = await shortenShareUrl("https://example.com/share?s=xyz");
+        expect(result).toBe("https://is.gd/abc123");
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock.mock.calls[0][0]).toContain("https://is.gd/create.php");
+    });
+
+    it("falls back to https://v.gd/... when is.gd fails", async () => {
+        const fetchMock = vi.fn().mockImplementation(async (url: string) => {
+            if (url.includes("is.gd")) {
+                return { ok: false, status: 500 };
+            }
+            if (url.includes("v.gd")) {
+                return {
+                    ok: true,
+                    json: async () => ({ shorturl: "https://v.gd/fallback456" }),
+                };
+            }
+            return { ok: false, status: 404 };
+        });
+        vi.stubGlobal("fetch", fetchMock);
+
+        const result = await shortenShareUrl("https://example.com/share?s=xyz");
+        expect(result).toBe("https://v.gd/fallback456");
+        expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+
+    it("returns null when both is.gd and v.gd fail", async () => {
+        const fetchMock = vi.fn().mockRejectedValue(new Error("Network error"));
+        vi.stubGlobal("fetch", fetchMock);
+
+        const result = await shortenShareUrl("https://example.com/share?s=xyz");
+        expect(result).toBeNull();
+        expect(fetchMock).toHaveBeenCalledTimes(2);
     });
 });

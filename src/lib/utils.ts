@@ -190,6 +190,43 @@ export async function shareOrFallback(
         });
 }
 
+export async function shortenShareUrl(
+    longUrl: string,
+): Promise<string | null> {
+    if (!longUrl || longUrl.length > 4500) {
+        return null;
+    }
+
+    const services = [
+        `https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`,
+        `https://v.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`,
+    ];
+
+    for (const serviceUrl of services) {
+        try {
+            const signal =
+                typeof AbortSignal !== "undefined" &&
+                typeof (AbortSignal as any).timeout === "function"
+                    ? (AbortSignal as any).timeout(3500)
+                    : undefined;
+            const res = await fetch(serviceUrl, { signal });
+            if (res.ok) {
+                const data = await res.json();
+                if (
+                    typeof data?.shorturl === "string" &&
+                    data.shorturl.trim().startsWith("https://")
+                ) {
+                    return data.shorturl.trim();
+                }
+            }
+        } catch {
+            // Try next service
+        }
+    }
+
+    return null;
+}
+
 const PID_DEFAULT_HIDING_ZONE_OPTIONS = [
     "[railway=station]",
     "[railway=halt]",

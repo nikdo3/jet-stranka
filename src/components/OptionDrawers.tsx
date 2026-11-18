@@ -57,6 +57,7 @@ import {
     encodeShortSharePayload,
     fetchFromPastebin,
     shareOrFallback,
+    shortenShareUrl,
     uploadToPastebin,
 } from "@/lib/utils";
 import { OVERPASS_HOSTS } from "@/maps/api/constants";
@@ -552,12 +553,20 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                         }
                     }
 
+                    let finalShareUrl = shareUrl;
+                    if (!shareUrl.includes(`?${PASTEBIN_URL_PARAM}=`)) {
+                        const shortUrl = await shortenShareUrl(shareUrl);
+                        if (shortUrl) {
+                            finalShareUrl = shortUrl;
+                        }
+                    }
+
                     // Show platform native share sheet if possible
-                    await shareOrFallback(shareUrl).then((result) => {
+                    await shareOrFallback(finalShareUrl).then((result) => {
                         console.log(`result ${result}`);
                         if (result === false) {
                             return toast.error(
-                                `Clipboard not supported. Try manually copying/pasting: ${shareUrl}`,
+                                `Clipboard not supported. Try manually copying/pasting: ${finalShareUrl}`,
                                 { className: "p-0 w-[1000px]" },
                             );
                         }
