@@ -1,5 +1,10 @@
 import * as turf from "@turf/turf";
-import type { FeatureCollection, MultiPolygon } from "geojson";
+import type {
+    Feature,
+    FeatureCollection,
+    MultiPolygon,
+    Polygon,
+} from "geojson";
 import _ from "lodash";
 import osmtogeojson from "osmtogeojson";
 import { toast } from "react-toastify";
@@ -13,6 +18,7 @@ import {
 } from "@/lib/context";
 import { safeUnion } from "@/maps/geo-utils";
 import {
+    fetchPidAdminZones,
     fetchPidPois,
     fetchPidStopsGeoJSON,
     fetchPragueBorderGeoJSON,
@@ -237,8 +243,33 @@ export const findAdminBoundary = async (
     longitude: number,
     adminLevel: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
 ) => {
+    if (
+        latitude >= 49.9 &&
+        latitude <= 50.22 &&
+        longitude >= 14.18 &&
+        longitude <= 14.75
+    ) {
+        try {
+            const adminZones = await fetchPidAdminZones();
+            const pt = turf.point([longitude, latitude]);
+            const match = adminZones.features.find((f) => {
+                if (Number(f.properties?.admin_level) !== adminLevel) return false;
+                try {
+                    return turf.booleanPointInPolygon(pt, f as any);
+                } catch {
+                    return false;
+                }
+            });
+            if (match) {
+                return match;
+            }
+        } catch {
+            // Fall back to Overpass
+        }
+    }
+
     const query = `
-[out:json];
+[out:json][timeout:25];
 is_in(${latitude}, ${longitude})->.a;
 rel(pivot.a)["admin_level"="${adminLevel}"];
 out geom;
@@ -247,6 +278,46 @@ out geom;
     const geo = osmtogeojson(data);
     return geo.features?.[0];
 };
+
+export async function findAdminZonesInPrague(
+    adminLevel: number,
+    letter?: string,
+): Promise<Feature<Polygon | MultiPolygon>[] | null> {
+    if (mapGeoLocation.get()?.properties?.osm_id !== 435514) {
+        return null;
+    }
+
+    try {
+        const adminZones = await fetchPidAdminZones();
+        let features = adminZones.features.filter(
+            (f) => Number(f.properties?.admin_level) === adminLevel,
+        );
+
+        if (letter) {
+            const lUpper = letter.toUpperCase();
+            const matchesLetter = (val?: string) => {
+                if (!val) return false;
+                const trimmed = val.trim();
+                const ascii = trimmed
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                return (
+                    ascii.toUpperCase().startsWith(lUpper) ||
+                    trimmed.toUpperCase().startsWith(lUpper)
+                );
+            };
+
+            features = features.filter((f) => {
+                const p = (f.properties || {}) as any;
+                return matchesLetter(p["name:en"]) || matchesLetter(p.name);
+            });
+        }
+
+        return features;
+    } catch {
+        return null;
+    }
+}
 
 export const fetchCoastline = async () => {
     const response = await cacheFetch(

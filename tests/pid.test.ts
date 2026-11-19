@@ -8,6 +8,8 @@ import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
 import {
+    findAdminBoundary,
+    findAdminZonesInPrague,
     findPlacesInZone,
     findTentacleLocations,
 } from "../src/maps/api/overpass";
@@ -340,6 +342,93 @@ describe("PID Prague data & helpers", () => {
 
             const cinemasZone = await findPlacesInZone("[amenity=cinema]");
             expect(cinemasZone.elements.length).toBeGreaterThan(0);
+
+            expect(overpassCallCount).toBe(0);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    it("parses pid_admin_zones.geojson with Prague admin_level 4, 8, 9", () => {
+        const raw = fs.readFileSync(
+            path.join(pidDir, "pid_admin_zones.geojson"),
+            "utf8",
+        );
+        const data = JSON.parse(raw);
+        expect(data.type).toBe("FeatureCollection");
+        expect(data.features.length).toBeGreaterThan(50);
+
+        const prahaRegion = data.features.find(
+            (f: any) =>
+                f.properties?.admin_level === "4" &&
+                f.properties?.osm_id === 435514,
+        );
+        expect(prahaRegion).toBeDefined();
+        expect(prahaRegion.properties.name).toBe("Praha");
+
+        const hasAdminLevel8 = data.features.some(
+            (f: any) => f.properties?.admin_level === "8",
+        );
+        expect(hasAdminLevel8).toBe(true);
+
+        const praha1 = data.features.find(
+            (f: any) =>
+                f.properties?.admin_level === "9" &&
+                f.properties?.name === "Praha 1",
+        );
+        expect(praha1).toBeDefined();
+
+        const praha2 = data.features.find(
+            (f: any) =>
+                f.properties?.admin_level === "9" &&
+                f.properties?.name === "Praha 2",
+        );
+        expect(praha2).toBeDefined();
+    });
+
+    it("resolves findAdminBoundary and findAdminZonesInPrague offline without Overpass", async () => {
+        const originalFetch = globalThis.fetch;
+        let overpassCallCount = 0;
+
+        globalThis.fetch = async (input: any, init?: any) => {
+            const url = typeof input === "string" ? input : input.url;
+            if (url.includes("/pid/pid_admin_zones.geojson")) {
+                const data = JSON.parse(
+                    fs.readFileSync(
+                        path.join(pidDir, "pid_admin_zones.geojson"),
+                        "utf8",
+                    ),
+                );
+                return new Response(JSON.stringify(data), {
+                    status: 200,
+                    headers: { "Content-Type": "application/json" },
+                });
+            }
+            if (url.includes("interpreter") || url.includes("overpass")) {
+                overpassCallCount++;
+                throw new Error(
+                    "Overpass should not be called for offline Prague admin zone queries",
+                );
+            }
+            return originalFetch(input, init);
+        };
+
+        try {
+            // Prague 1 coordinates: lat 50.0875, lng 14.421
+            const boundary = await findAdminBoundary(50.0875, 14.421, 9);
+            expect(boundary).toBeDefined();
+            expect(boundary.properties?.name).toBe("Praha 1");
+            expect(boundary.properties?.admin_level).toBe("9");
+
+            // Letter 'P' admin zones in Prague (level 9)
+            const pZones = await findAdminZonesInPrague(9, "P");
+            expect(pZones).not.toBeNull();
+            expect(pZones!.length).toBeGreaterThan(0);
+            for (const z of pZones!) {
+                expect(z.properties?.admin_level).toBe("9");
+                const name = (z.properties?.["name:en"] || z.properties?.name || "") as string;
+                expect(name.toUpperCase().startsWith("P")).toBe(true);
+            }
 
             expect(overpassCallCount).toBe(0);
         } finally {

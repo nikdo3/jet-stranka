@@ -85,8 +85,8 @@ export const MatchingQuestionComponent = ({
                                 6: "OSM Zone 6 (Okres / Praha)",
                                 7: "OSM Zone 7",
                                 8: "OSM Zone 8 (Obec / Město)",
-                                9: "OSM Zone 9",
-                                10: "OSM Zone 10 (Městská část)",
+                                9: "OSM Zone 9 (Městská část)",
+                                10: "OSM Zone 10 (Katastrální území / část)",
                             }}
                             value={data.cat.adminLevel.toString()}
                             onValueChange={(value) =>

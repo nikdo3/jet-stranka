@@ -205,7 +205,6 @@ export const QuestionCard = ({
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        disabled={$isLoading}
                                         aria-label="Delete question"
                                         title="Delete question"
                                     >

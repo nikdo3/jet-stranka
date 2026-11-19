@@ -146,47 +146,47 @@ export const Map = ({ className }: { className?: string }) => {
 
         isLoading.set(true);
 
-        if ($questions.length === 0) {
-            await clearCache();
-        }
-
-        let mapGeoData = mapGeoJSON.get();
-
-        if (!mapGeoData) {
-            const polyGeoData = polyGeoJSON.get();
-            if (polyGeoData) {
-                mapGeoData = polyGeoData;
-                mapGeoJSON.set(polyGeoData);
-            } else {
-                await toast.promise(
-                    determineMapBoundaries()
-                        .then((x) => {
-                            mapGeoJSON.set(x);
-                            mapGeoData = x;
-                        })
-                        .catch((error) => console.log(error)),
-                    {
-                        error: "Error refreshing map data",
-                    },
-                );
-            }
-        }
-
-        if ($hiderMode !== false) {
-            for (const question of $questions) {
-                await hiderifyQuestion(question);
-            }
-
-            triggerLocalRefresh.set(Math.random()); // Refresh the question sidebar with new information but not this map
-        }
-
-        map.eachLayer((layer: any) => {
-            if (layer.questionKey || layer.questionKey === 0) {
-                map.removeLayer(layer);
-            }
-        });
-
         try {
+            if ($questions.length === 0) {
+                await clearCache();
+            }
+
+            let mapGeoData = mapGeoJSON.get();
+
+            if (!mapGeoData) {
+                const polyGeoData = polyGeoJSON.get();
+                if (polyGeoData) {
+                    mapGeoData = polyGeoData;
+                    mapGeoJSON.set(polyGeoData);
+                } else {
+                    await toast.promise(
+                        determineMapBoundaries()
+                            .then((x) => {
+                                mapGeoJSON.set(x);
+                                mapGeoData = x;
+                            })
+                            .catch((error) => console.log(error)),
+                        {
+                            error: "Error refreshing map data",
+                        },
+                    );
+                }
+            }
+
+            if ($hiderMode !== false) {
+                for (const question of $questions) {
+                    await hiderifyQuestion(question);
+                }
+
+                triggerLocalRefresh.set(Math.random()); // Refresh the question sidebar with new information but not this map
+            }
+
+            map.eachLayer((layer: any) => {
+                if (layer.questionKey || layer.questionKey === 0) {
+                    map.removeLayer(layer);
+                }
+            });
+
             mapGeoData = await applyQuestionsToMapGeoData(
                 $questions,
                 mapGeoData,

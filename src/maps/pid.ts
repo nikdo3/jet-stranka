@@ -116,6 +116,10 @@ export const fetchPidPois = memoizedFetch<FeatureCollection<Point>>(
     "/pid/pid_pois.geojson",
 );
 
+export const fetchPidAdminZones = memoizedFetch<
+    FeatureCollection<Polygon | MultiPolygon>
+>("/pid/pid_admin_zones.geojson");
+
 export const fetchPragueBorderGeoJSON = memoizedFetch<
     FeatureCollection<Polygon | MultiPolygon>
 >("/pid/praha_border.json", (data) => {

@@ -22,6 +22,7 @@ import {
 } from "@/lib/context";
 import {
     findAdminBoundary,
+    findAdminZonesInPrague,
     findPlacesInZone,
     LOCATION_FIRST_TAG,
     nearestToQuestion,
@@ -152,7 +153,9 @@ export const determineMatchingBoundary = _.memoize(
                 return false;
             }
             case "custom-zone": {
+                if (!question.geo) return false;
                 const flattened = turf.flatten(question.geo as any);
+                if (!flattened.features || flattened.features.length === 0) return false;
                 const pt = turf.point([question.lng, question.lat]);
                 boundary =
                     flattened.features.find(
@@ -250,39 +253,61 @@ export const determineMatchingBoundary = _.memoize(
                     throw new Error("No boundary found");
                 }
 
-                let englishName = zone.properties?.["name:en"];
+                const rawName = (
+                    (zone.properties?.["name:en"] as string | undefined) ||
+                    (zone.properties?.name as string | undefined) ||
+                    ""
+                ).trim();
 
-                if (!englishName) {
-                    const name = zone.properties?.name;
-
-                    if (/^[a-zA-Z]$/.test(name[0])) {
-                        englishName = name;
-                    } else {
-                        toast.error("No English name found for this zone");
-                        throw new Error("No English name");
-                    }
+                const ascii = rawName
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "");
+                if (!ascii || !/^[a-zA-Z]/.test(ascii)) {
+                    toast.error("No valid name found for this zone");
+                    throw new Error("No valid name");
                 }
 
-                const letter = englishName[0].toUpperCase();
+                const letter = ascii[0].toUpperCase();
 
-                boundary = turf.featureCollection(
-                    osmtogeojson(
-                        await findPlacesInZone(
-                            `[admin_level=${question.cat.adminLevel}]["name:en"~"^${letter}.+"]`, // Regex is faster than filtering afterward
-                            `Finding zones that start with the same letter (${letter})...`,
-                            "relation",
-                            "geom",
-                            [
-                                `[admin_level=${question.cat.adminLevel}]["name"~"^${letter}.+"]`,
-                            ], // Regex is faster than filtering afterward
+                let offlineFeatures: Feature<Polygon | MultiPolygon>[] | null =
+                    null;
+                if (
+                    mapGeoLocation.get()?.properties?.osm_id === 435514 &&
+                    !polyGeoJSON.get()
+                ) {
+                    offlineFeatures = await findAdminZonesInPrague(
+                        question.cat.adminLevel,
+                        letter,
+                    );
+                }
+
+                if (offlineFeatures && offlineFeatures.length > 0) {
+                    boundary = turf.featureCollection(offlineFeatures);
+                } else {
+                    boundary = turf.featureCollection(
+                        osmtogeojson(
+                            await findPlacesInZone(
+                                `[admin_level=${question.cat.adminLevel}]["name:en"~"^${letter}.+"]`, // Regex is faster than filtering afterward
+                                `Finding zones that start with the same letter (${letter})...`,
+                                "relation",
+                                "geom",
+                                [
+                                    `[admin_level=${question.cat.adminLevel}]["name"~"^${letter}.+"]`,
+                                ], // Regex is faster than filtering afterward
+                            ),
+                        ).features.filter(
+                            (x): x is Feature<Polygon | MultiPolygon> =>
+                                x.geometry &&
+                                (x.geometry.type === "Polygon" ||
+                                    x.geometry.type === "MultiPolygon"),
                         ),
-                    ).features.filter(
-                        (x): x is Feature<Polygon | MultiPolygon> =>
-                            x.geometry &&
-                            (x.geometry.type === "Polygon" ||
-                                x.geometry.type === "MultiPolygon"),
-                    ),
-                );
+                    );
+                }
+
+                if (boundary.features.length === 0) {
+                    toast.error("No matching zones found");
+                    throw new Error("No matching zones found");
+                }
 
                 // It's either simplify or crash. Technically this could be bad if someone's hiding zone was inside multiple zones, but that's unlikely.
                 boundary = safeUnion(
@@ -310,6 +335,9 @@ export const determineMatchingBoundary = _.memoize(
             case "park-full":
             case "custom-points": {
                 const data = await findMatchingPlaces(question);
+                if (!data || (Array.isArray(data) && data.length < 2)) {
+                    return false;
+                }
 
                 const voronoi = geoSpatialVoronoi(data);
                 const point = turf.point([question.lng, question.lat]);
@@ -430,6 +458,10 @@ export const hiderifyMatching = async (question: MatchingQuestion) => {
             ) as FeatureCollection<Point>;
         }
 
+        if (!places || places.features.length === 0) {
+            return question;
+        }
+
         const nearestHiderTrainStation = turf.nearestPoint(hiderPoint, places);
         const nearestSeekerTrainStation = turf.nearestPoint(
             seekerPoint,
@@ -477,14 +509,14 @@ export const hiderifyMatching = async (question: MatchingQuestion) => {
         }
 
         if (question.type === "same-first-letter-station") {
-            if (
-                hiderEnglishName[0].toUpperCase() ===
-                seekerEnglishName[0].toUpperCase()
-            ) {
-                question.same = true;
-            } else {
-                question.same = false;
-            }
+            const hiderAscii = hiderEnglishName
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+            const seekerAscii = seekerEnglishName
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+            question.same =
+                hiderAscii[0]?.toUpperCase() === seekerAscii[0]?.toUpperCase();
         } else if (question.type === "same-length-station") {
             if (hiderEnglishName.length === seekerEnglishName.length) {
                 question.lengthComparison = "same";
