@@ -347,7 +347,7 @@ export const MatchingQuestionComponent = ({
                             }
                             // The category should be defined such that no error is thrown if this is a zone question.
                             if (!(data as any).cat) {
-                                (data as any).cat = { adminLevel: 3 };
+                                (data as any).cat = { adminLevel: 9 };
                             }
                             questionModified((data.type = value));
                             return;
@@ -360,7 +360,7 @@ export const MatchingQuestionComponent = ({
 
                         // The category should be defined such that no error is thrown if this is a zone question.
                         if (!(data as any).cat) {
-                            (data as any).cat = { adminLevel: 3 };
+                            (data as any).cat = { adminLevel: 9 };
                         }
                         questionModified((data.type = value));
                     }}

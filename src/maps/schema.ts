@@ -283,7 +283,7 @@ const zoneMatchingQuestionsSchema = baseMatchingQuestionSchema.extend({
                 z.literal(10),
             ]),
         })
-        .default(() => ({ adminLevel: 3 }) as { adminLevel: 3 }),
+        .default(() => ({ adminLevel: 9 }) as { adminLevel: 9 }),
 });
 
 const homeGameMatchingQuestionsSchema = baseMatchingQuestionSchema.extend({
