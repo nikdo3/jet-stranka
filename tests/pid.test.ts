@@ -8,6 +8,10 @@ import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
 import {
+    findPlacesInZone,
+    findTentacleLocations,
+} from "../src/maps/api/overpass";
+import {
     VLTAVA_ISLANDS,
     VLTAVA_LINE,
     filterPidStationsByModes,
@@ -230,5 +234,116 @@ describe("PID Prague data & helpers", () => {
         const polygons = voronoi.polygons();
         expect(polygons.type).toBe("FeatureCollection");
         expect(polygons.features.length).toBe(stops.features.length);
+    });
+
+    it("parses PID POIs GeoJSON and verifies Prague POI categories", () => {
+        const poisPath = path.join(pidDir, "pid_pois.geojson");
+        expect(fs.existsSync(poisPath)).toBe(true);
+        const content = fs.readFileSync(poisPath, "utf8");
+        const pois = JSON.parse(content);
+
+        expect(pois.type).toBe("FeatureCollection");
+        expect(pois.features.length).toBeGreaterThan(1500);
+
+        const hasCinema = pois.features.some(
+            (f: any) => f.properties?.amenity === "cinema",
+        );
+        const hasMuseum = pois.features.some(
+            (f: any) => f.properties?.tourism === "museum",
+        );
+        const hasHospital = pois.features.some(
+            (f: any) => f.properties?.amenity === "hospital",
+        );
+        const hasLibrary = pois.features.some(
+            (f: any) => f.properties?.amenity === "library",
+        );
+        const hasPark = pois.features.some(
+            (f: any) => f.properties?.leisure === "park",
+        );
+        const hasPeak = pois.features.some(
+            (f: any) => f.properties?.natural === "peak",
+        );
+        const hasMcDonalds = pois.features.some(
+            (f: any) => f.properties?.["brand:wikidata"] === "Q38076",
+        );
+        const pragueAirport = pois.features.find(
+            (f: any) => f.properties?.iata === "PRG",
+        );
+
+        expect(hasCinema).toBe(true);
+        expect(hasMuseum).toBe(true);
+        expect(hasHospital).toBe(true);
+        expect(hasLibrary).toBe(true);
+        expect(hasPark).toBe(true);
+        expect(hasPeak).toBe(true);
+        expect(hasMcDonalds).toBe(true);
+        expect(pragueAirport).toBeDefined();
+        expect(pragueAirport?.properties?.name).toBe(
+            "Letiště Václava Havla Praha",
+        );
+        expect(pragueAirport?.properties?.aeroway).toBe("aerodrome");
+    });
+
+    it("resolves Prague tentacle locations and places in zone offline without Overpass", async () => {
+        const originalFetch = globalThis.fetch;
+        let overpassCallCount = 0;
+
+        globalThis.fetch = async (input: any, init?: any) => {
+            const url = typeof input === "string" ? input : input.url;
+            if (url.includes("/pid/pid_pois.geojson")) {
+                const data = JSON.parse(
+                    fs.readFileSync(
+                        path.join(pidDir, "pid_pois.geojson"),
+                        "utf8",
+                    ),
+                );
+                return new Response(JSON.stringify(data), {
+                    status: 200,
+                    headers: { "Content-Type": "application/json" },
+                });
+            }
+            if (url.includes("interpreter") || url.includes("overpass")) {
+                overpassCallCount++;
+                throw new Error(
+                    "Overpass should not be called for offline Prague queries",
+                );
+            }
+            return originalFetch(input, init);
+        };
+
+        try {
+            const cinemas = await findTentacleLocations({
+                lat: 50.08,
+                lng: 14.42,
+                radius: 10,
+                unit: "kilometers",
+                locationType: "cinema",
+            });
+            expect(cinemas.features.length).toBeGreaterThan(0);
+
+            const museums = await findTentacleLocations({
+                lat: 50.08,
+                lng: 14.42,
+                radius: 10,
+                unit: "kilometers",
+                locationType: "museum",
+            });
+            expect(museums.features.length).toBeGreaterThan(0);
+
+            const airports = await findPlacesInZone(
+                '["aeroway"="aerodrome"]["iata"]',
+            );
+            expect(airports.elements.length).toBeGreaterThan(0);
+            expect(
+                airports.elements.some((el: any) => el.tags?.iata === "PRG"),
+            ).toBe(true);
+
+            const cinemasZone = await findPlacesInZone("[amenity=cinema]");
+            expect(cinemasZone.elements.length).toBeGreaterThan(0);
+
+            expect(overpassCallCount).toBe(0);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
     });
 });

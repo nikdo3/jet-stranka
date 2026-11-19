@@ -7,6 +7,8 @@ export const OVERPASS_HOSTS = {
         "https://overpass.private.coffee/api/interpreter",
     "maps.mail.ru (unofficial; fast but sometimes unavailable)":
         "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+    "kumi.systems (unofficial; backup)":
+        "https://overpass.kumi.systems/api/interpreter",
 } as const;
 
 export const GEOCODER_API = "https://photon.komoot.io/api/";

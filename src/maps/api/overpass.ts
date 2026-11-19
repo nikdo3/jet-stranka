@@ -12,7 +12,11 @@ import {
     polyGeoJSON,
 } from "@/lib/context";
 import { safeUnion } from "@/maps/geo-utils";
-import { fetchPidStopsGeoJSON, fetchPragueBorderGeoJSON } from "@/maps/pid";
+import {
+    fetchPidPois,
+    fetchPidStopsGeoJSON,
+    fetchPragueBorderGeoJSON,
+} from "@/maps/pid";
 
 import { cacheFetch, determineCache } from "./cache";
 import { LOCATION_FIRST_TAG, OVERPASS_HOSTS } from "./constants";
@@ -46,9 +50,14 @@ export const getOverpassData = async (
     const fallbackBaseUrls = allHostUrls.filter((h) => h !== primaryBaseUrl);
 
     const primaryUrl = `${primaryBaseUrl}?data=${encodedQuery}`;
-    let response = await cacheFetch(primaryUrl, loadingText, cacheType);
+    let response: Response | null = null;
+    try {
+        response = await cacheFetch(primaryUrl, loadingText, cacheType);
+    } catch {
+        // Fall through to fallback hosts
+    }
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
         for (const fallbackBase of fallbackBaseUrls) {
             try {
                 const fallbackResponse = await cacheFetch(
@@ -63,18 +72,14 @@ export const getOverpassData = async (
                     break;
                 }
             } catch {
-                toast.error(
-                    `Could not load data from Overpass: ${response.status} ${response.statusText}`,
-                    { toastId: "overpass-error" },
-                );
-                return { elements: [] };
+                continue;
             }
         }
     }
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
         toast.error(
-            `Could not load data from Overpass: ${response.status} ${response.statusText}`,
+            `Could not load data from Overpass: ${response?.status ?? "Network Error"} ${response?.statusText ?? ""}`.trim(),
             { toastId: "overpass-error" },
         );
         return { elements: [] };
@@ -140,6 +145,49 @@ export const findTentacleLocations = async (
             return true;
         });
         return turf.featureCollection(features);
+    }
+
+    const isPrague =
+        mapGeoLocation.get()?.properties?.osm_id === 435514 ||
+        (question.lat >= 49.90 &&
+            question.lat <= 50.22 &&
+            question.lng >= 14.18 &&
+            question.lng <= 14.75);
+
+    const firstTag = LOCATION_FIRST_TAG[question.locationType];
+    if (isPrague && firstTag) {
+        const pois = await fetchPidPois();
+        const center = turf.point([question.lng, question.lat]);
+        const maxMeters = turf.convertLength(
+            question.radius,
+            question.unit,
+            "meters",
+        );
+        const seen = new Set<string>();
+        const response = turf.points([]);
+        for (const feature of pois.features) {
+            const props = (feature.properties || {}) as any;
+            if (props[firstTag] !== question.locationType) continue;
+            const name = props.name_en ?? props.name;
+            if (!name || seen.has(name)) continue;
+            if (
+                turf.distance(center, feature as any, { units: "meters" }) >
+                maxMeters
+            ) {
+                continue;
+            }
+            seen.add(name);
+            response.features.push(
+                turf.point(
+                    [
+                        feature.geometry.coordinates[0],
+                        feature.geometry.coordinates[1],
+                    ],
+                    { ...props, name },
+                ),
+            );
+        }
+        return response;
     }
 
     const query = `
@@ -262,6 +310,124 @@ out geom;
     return uniqNodes;
 };
 
+async function getPragueOfflinePlaces(
+    filter: string,
+): Promise<{ elements: any[] } | null> {
+    if (filter.includes("place=city")) {
+        return {
+            elements: [
+                {
+                    type: "node",
+                    id: 435514,
+                    lat: 50.0875,
+                    lon: 14.421,
+                    tags: {
+                        place: "city",
+                        name: "Praha",
+                        "name:en": "Prague",
+                        population: "1350000",
+                    },
+                },
+            ],
+        };
+    }
+
+    const poiToElement = (f: any) => {
+        const p = f.properties || {};
+        const tags: Record<string, string> = { ...p };
+        delete (tags as any).id;
+        if (p.name_en && !tags["name:en"]) {
+            tags["name:en"] = p.name_en;
+        }
+        return {
+            type: "node",
+            id: p.id ?? 0,
+            lat: f.geometry.coordinates[1],
+            lon: f.geometry.coordinates[0],
+            tags,
+        };
+    };
+
+    if (filter.includes("aeroway") && filter.includes("iata")) {
+        const pois = await fetchPidPois();
+        const elements = pois.features
+            .filter(
+                (f) =>
+                    f.properties?.aeroway === "aerodrome" && f.properties?.iata,
+            )
+            .map(poiToElement);
+        return { elements };
+    }
+
+    if (filter.includes("brand:wikidata") || filter.includes("Q38076")) {
+        const pois = await fetchPidPois();
+        const elements = pois.features
+            .filter((f) => f.properties?.["brand:wikidata"] === "Q38076")
+            .map(poiToElement);
+        return { elements };
+    }
+
+    if (
+        filter.includes("natural=peak") ||
+        filter.includes('"natural"="peak"')
+    ) {
+        const pois = await fetchPidPois();
+        const elements = pois.features
+            .filter((f) => f.properties?.natural === "peak")
+            .map(poiToElement);
+        return { elements };
+    }
+
+    if (
+        filter.includes("diplomatic=consulate") ||
+        filter.includes('"diplomatic"="consulate"')
+    ) {
+        const pois = await fetchPidPois();
+        const elements = pois.features
+            .filter((f) => f.properties?.diplomatic === "consulate")
+            .map(poiToElement);
+        return { elements };
+    }
+
+    const amenityMatch = filter.match(/\["?amenity"?="?([a-zA-Z0-9_]+)"?\]/);
+    if (amenityMatch) {
+        const val = amenityMatch[1];
+        if (["cinema", "hospital", "library"].includes(val)) {
+            const pois = await fetchPidPois();
+            const elements = pois.features
+                .filter((f) => f.properties?.amenity === val)
+                .map(poiToElement);
+            return { elements };
+        }
+    }
+
+    const tourismMatch = filter.match(/\["?tourism"?="?([a-zA-Z0-9_]+)"?\]/);
+    if (tourismMatch) {
+        const val = tourismMatch[1];
+        if (["museum", "zoo", "aquarium", "theme_park"].includes(val)) {
+            const pois = await fetchPidPois();
+            const elements = pois.features
+                .filter((f) => f.properties?.tourism === val)
+                .map(poiToElement);
+            return { elements };
+        }
+    }
+
+    const leisureMatch = filter.match(/\["?leisure"?="?([a-zA-Z0-9_]+)"?\]/);
+    if (leisureMatch) {
+        const val = leisureMatch[1];
+        if (["park", "golf_course"].includes(val)) {
+            const pois = await fetchPidPois();
+            const elements = pois.features
+                .filter((f) => f.properties?.leisure === val)
+                .map(poiToElement);
+            return { elements };
+        }
+    }
+
+    return null;
+}
+
 export const findPlacesInZone = async (
     filter: string,
     loadingText?: string,
@@ -278,18 +444,31 @@ export const findPlacesInZone = async (
     alternatives: string[] = [],
     timeoutDuration: number = 0,
 ) => {
-    let query = "";
+    let data: any = null;
+
     const $polyGeoJSON = polyGeoJSON.get();
-    if ($polyGeoJSON) {
-        query = `
+    const primaryLocation = mapGeoLocation.get();
+    const isPragueOnly =
+        !$polyGeoJSON &&
+        primaryLocation?.properties?.osm_id === 435514 &&
+        additionalMapGeoLocations.get().filter((e) => e.added).length === 0;
+
+    if (isPragueOnly) {
+        data = await getPragueOfflinePlaces(filter);
+    }
+
+    if (!data) {
+        let query = "";
+        if ($polyGeoJSON) {
+            query = `
 [out:json]${timeoutDuration != 0 ? `[timeout:${timeoutDuration}]` : ""};
 (
 ${searchType}${filter}(poly:"${turf
-            .getCoords($polyGeoJSON.features)
-            .flatMap((polygon) => polygon.geometry.coordinates)
-            .flat()
-            .map((coord) => [coord[1], coord[0]].join(" "))
-            .join(" ")}");
+                .getCoords($polyGeoJSON.features)
+                .flatMap((polygon) => polygon.geometry.coordinates)
+                .flat()
+                .map((coord) => [coord[1], coord[0]].join(" "))
+                .join(" ")}");
 ${
     alternatives.length > 0
         ? alternatives
@@ -308,64 +487,64 @@ ${
 );
 out ${outType};
 `;
-    } else {
-        const primaryLocation = mapGeoLocation.get();
-        const additionalLocations = additionalMapGeoLocations
-            .get()
-            .filter((entry) => entry.added)
-            .map((entry) => entry.location);
-        const allLocations = [primaryLocation, ...additionalLocations];
-        const relationToAreaBlocks = allLocations
-            .map((loc, idx) => {
-                const regionVar = `.region${idx}`;
-                return `relation(${loc.properties.osm_id});map_to_area->${regionVar};`;
-            })
-            .join("\n");
-        const searchBlocks = allLocations
-            .map((_, idx) => {
-                const regionVar = `area.region${idx}`;
-                const altQueries =
-                    alternatives.length > 0
-                        ? alternatives
-                              .map(
-                                  (alt) => `${searchType}${alt}(${regionVar});`,
-                              )
-                              .join("\n")
-                        : "";
-                return `
-            ${searchType}${filter}(${regionVar});
-            ${altQueries}
-          `;
-            })
-            .join("\n");
-        query = `
-        [out:json]${timeoutDuration !== 0 ? `[timeout:${timeoutDuration}]` : ""};
-        ${relationToAreaBlocks}
-        (
-        ${searchBlocks}
+        } else {
+            const additionalLocations = additionalMapGeoLocations
+                .get()
+                .filter((entry) => entry.added)
+                .map((entry) => entry.location);
+            const allLocations = [primaryLocation, ...additionalLocations];
+            const relationToAreaBlocks = allLocations
+                .map((loc, idx) => {
+                    const regionVar = `.region${idx}`;
+                    return `relation(${loc.properties.osm_id});map_to_area->${regionVar};`;
+                })
+                .join("\n");
+            const searchBlocks = allLocations
+                .map((_, idx) => {
+                    const regionVar = `area.region${idx}`;
+                    const altQueries =
+                        alternatives.length > 0
+                            ? alternatives
+                                  .map(
+                                      (alt) => `${searchType}${alt}(${regionVar});`,
+                                  )
+                                  .join("\n")
+                            : "";
+                    return `
+                ${searchType}${filter}(${regionVar});
+                ${altQueries}
+              `;
+                })
+                .join("\n");
+            query = `
+            [out:json]${timeoutDuration !== 0 ? `[timeout:${timeoutDuration}]` : ""};
+            ${relationToAreaBlocks}
+            (
+            ${searchBlocks}
+            );
+            out ${outType};
+            `;
+        }
+        data = await getOverpassData(
+            query,
+            loadingText,
+            CacheType.ZONE_CACHE,
         );
-        out ${outType};
-        `;
-    }
-    const data = await getOverpassData(
-        query,
-        loadingText,
-        CacheType.ZONE_CACHE,
-    );
-    if (data && Array.isArray(data.elements)) {
-        data.elements = data.elements.filter(
-            (el: any) =>
-                !(
-                    el.tags?.proposed ||
-                    el.tags?.construction ||
-                    el.tags?.disused === "yes" ||
-                    el.tags?.abandoned === "yes" ||
-                    el.tags?.["disused:railway"] ||
-                    el.tags?.["proposed:railway"] ||
-                    el.tags?.["construction:railway"] ||
-                    el.tags?.["abandoned:railway"]
-                ),
-        );
+        if (data && Array.isArray(data.elements)) {
+            data.elements = data.elements.filter(
+                (el: any) =>
+                    !(
+                        el.tags?.proposed ||
+                        el.tags?.construction ||
+                        el.tags?.disused === "yes" ||
+                        el.tags?.abandoned === "yes" ||
+                        el.tags?.["disused:railway"] ||
+                        el.tags?.["proposed:railway"] ||
+                        el.tags?.["construction:railway"] ||
+                        el.tags?.["abandoned:railway"]
+                    ),
+            );
+        }
     }
     const subtractedEntries = additionalMapGeoLocations
         .get()
@@ -425,7 +604,7 @@ export const nearestToQuestion = async (
 ) => {
     let radius = 30;
     let instances: any = { features: [] };
-    while (instances.features.length === 0) {
+    while (instances.features.length === 0 && radius <= 120) {
         instances = await findTentacleLocations(
             {
                 lat: question.lat,
@@ -437,6 +616,11 @@ export const nearestToQuestion = async (
             "Finding matching locations...",
         );
         radius += 30;
+    }
+    if (instances.features.length === 0) {
+        throw new Error(
+            `No matching ${question.type} locations found within 120 miles.`,
+        );
     }
     const questionPoint = turf.point([question.lng, question.lat]);
     return turf.nearestPoint(questionPoint, instances as any);
