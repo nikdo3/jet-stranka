@@ -17,6 +17,7 @@ import {
     VLTAVA_ISLANDS,
     VLTAVA_LINE,
     filterPidStationsByModes,
+    getPidDistrictPolygon,
     getVltavaBankPolygon,
 } from "../src/maps/pid";
 
@@ -429,6 +430,15 @@ describe("PID Prague data & helpers", () => {
                 const name = (z.properties?.["name:en"] || z.properties?.name || "") as string;
                 expect(name.toUpperCase().startsWith("P")).toBe(true);
             }
+
+            // Karlín (cadastral admin_level 10) & Praha 8 (municipal district admin_level 9)
+            const karlin = await findAdminBoundary(50.09303, 14.45176, 10);
+            expect(karlin).toBeDefined();
+            expect(karlin.properties?.name).toBe("Karlín");
+
+            const praha8 = await getPidDistrictPolygon(14.45176, 50.09303);
+            expect(praha8).not.toBeNull();
+            expect(praha8!.properties?.name).toBe("Praha 8");
 
             expect(overpassCallCount).toBe(0);
         } finally {

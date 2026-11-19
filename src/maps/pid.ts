@@ -120,6 +120,28 @@ export const fetchPidAdminZones = memoizedFetch<
     FeatureCollection<Polygon | MultiPolygon>
 >("/pid/pid_admin_zones.geojson");
 
+/** Returns the real Prague municipal district polygon (admin_level 9, or 8 fallback) containing [lng, lat]. */
+export async function getPidDistrictPolygon(
+    lng: number,
+    lat: number,
+): Promise<Feature<Polygon | MultiPolygon> | null> {
+    const adminZones = await fetchPidAdminZones();
+    const pt = turf.point([lng, lat]);
+    return (
+        adminZones.features.find(
+            (f) =>
+                String(f.properties?.admin_level) === "9" &&
+                turf.booleanPointInPolygon(pt, f as any),
+        ) ??
+        adminZones.features.find(
+            (f) =>
+                String(f.properties?.admin_level) === "8" &&
+                turf.booleanPointInPolygon(pt, f as any),
+        ) ??
+        null
+    );
+}
+
 export const fetchPragueBorderGeoJSON = memoizedFetch<
     FeatureCollection<Polygon | MultiPolygon>
 >("/pid/praha_border.json", (data) => {

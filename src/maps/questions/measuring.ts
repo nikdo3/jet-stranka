@@ -36,6 +36,7 @@ import {
     fetchPidMetroTramLines,
     fetchPidStopsGeoJSON,
     fetchPragueBorderGeoJSON,
+    getPidDistrictPolygon,
     VLTAVA_LINE,
 } from "@/maps/pid";
 import type {
@@ -325,12 +326,16 @@ export const determineMeasuringBoundary = async (
             });
         }
         case "pid-district-border": {
-            const districts = await fetchPidCityDistricts();
-            const voronoi = geoSpatialVoronoi(districts);
-            const pt = turf.point([question.lng, question.lat]);
-            const cell = voronoi.features.find((f) =>
-                turf.booleanPointInPolygon(pt, f),
-            );
+            let cell = await getPidDistrictPolygon(question.lng, question.lat);
+            if (!cell) {
+                const districts = await fetchPidCityDistricts();
+                const voronoi = geoSpatialVoronoi(districts);
+                const pt = turf.point([question.lng, question.lat]);
+                cell =
+                    voronoi.features.find((f) =>
+                        turf.booleanPointInPolygon(pt, f),
+                    ) ?? null;
+            }
             if (!cell) {
                 toast.error("No PID district found at this location");
                 return [turf.multiPolygon([])];

@@ -37,6 +37,7 @@ import {
     fetchPidStopsGeoJSON,
     fetchPidZones,
     filterPidStationsByModes,
+    getPidDistrictPolygon,
     getVltavaBankPolygon,
 } from "@/maps/pid";
 import type {
@@ -194,12 +195,18 @@ export const determineMatchingBoundary = _.memoize(
                 break;
             }
             case "pid-district": {
-                const districts = await fetchPidCityDistricts();
-                const voronoi = geoSpatialVoronoi(districts);
-                const pt = turf.point([question.lng, question.lat]);
-                boundary = voronoi.features.find((f) =>
-                    turf.booleanPointInPolygon(pt, f),
+                boundary = await getPidDistrictPolygon(
+                    question.lng,
+                    question.lat,
                 );
+                if (!boundary) {
+                    const districts = await fetchPidCityDistricts();
+                    const voronoi = geoSpatialVoronoi(districts);
+                    const pt = turf.point([question.lng, question.lat]);
+                    boundary = voronoi.features.find((f) =>
+                        turf.booleanPointInPolygon(pt, f),
+                    );
+                }
                 if (!boundary) {
                     toast.error("No PID district found at this location");
                     throw new Error("No PID district found");
