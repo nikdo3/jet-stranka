@@ -309,10 +309,10 @@ export const determineMatchingBoundary = _.memoize(
                     throw new Error("No matching zones found");
                 }
 
-                // It's either simplify or crash. Technically this could be bad if someone's hiding zone was inside multiple zones, but that's unlikely.
+                // Keep high-precision boundaries while avoiding excessive vertex counts
                 boundary = safeUnion(
                     turf.simplify(boundary, {
-                        tolerance: 0.001,
+                        tolerance: 0.0001,
                         highQuality: true,
                         mutate: true,
                     }),

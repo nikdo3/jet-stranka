@@ -263,9 +263,9 @@ export const findAdminBoundary = async (
             if (match) {
                 return match;
             }
-            if ([3, 5, 7].includes(adminLevel)) {
+            if ([3, 5, 7, 10].includes(adminLevel)) {
                 toast.info(
-                    `OSM zóna ${adminLevel} se v ČR nepoužívá — vyberte zónu 4 (Kraj), 6 (Okres), 8 (Obec), 9 (Městská část) nebo 10.`,
+                    `OSM zóna ${adminLevel} zde není dostupná — použijte zónu 4 (Kraj), 6 (Okres), 8 (Obec) nebo 9 (Městská část).`,
                     { toastId: "osm-zone-unsupported" },
                 );
                 return undefined;
