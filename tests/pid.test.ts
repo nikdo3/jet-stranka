@@ -8,6 +8,15 @@ import { describe, expect, it } from "vitest";
 
 import { parseCustomStationsFromText } from "../src/maps/api/importers";
 import {
+    hidingZone,
+    mapGeoLocation,
+    questions,
+} from "../src/lib/context";
+import {
+    decodeShortSharePayload,
+    encodeShortSharePayload,
+} from "../src/lib/utils";
+import {
     findAdminBoundary,
     findAdminZonesInPrague,
     findPlacesInZone,
@@ -528,5 +537,58 @@ describe("PID Prague data & helpers", () => {
         } finally {
             globalThis.fetch = originalFetch;
         }
+    });
+
+    it("re-shares newly added and deleted questions after loading a shared link", async () => {
+        const q1 = {
+            id: "radius" as const,
+            key: 1,
+            data: {
+                lat: 50.08,
+                lng: 14.43,
+                radius: 2,
+                unit: "kilometers" as const,
+                within: true,
+                drag: false,
+                collapsed: false,
+            },
+        };
+        const q2 = {
+            id: "matching" as const,
+            key: 2,
+            data: {
+                lat: 50.09,
+                lng: 14.44,
+                same: true,
+                type: "zone" as const,
+                drag: false,
+                collapsed: false,
+            },
+        };
+
+        questions.set([q1] as any);
+        const firstEncoded = await encodeShortSharePayload(hidingZone.get());
+        const firstDecoded = await decodeShortSharePayload(firstEncoded);
+        expect(firstDecoded.questions).toHaveLength(1);
+        expect(firstDecoded.properties.questions).toHaveLength(1);
+
+        // Simulate loading shared link + adding a 2nd question
+        mapGeoLocation.set(firstDecoded);
+        questions.set([q1, q2] as any);
+
+        const secondEncoded = await encodeShortSharePayload(hidingZone.get());
+        const secondDecoded = await decodeShortSharePayload(secondEncoded);
+        expect(secondDecoded.properties.questions).toHaveLength(2);
+        expect(secondDecoded.properties.questions[1].type).toBe("matching");
+
+        // Simulate deleting the 1st question and re-sharing
+        questions.set([q2] as any);
+        const thirdEncoded = await encodeShortSharePayload(hidingZone.get());
+        const thirdDecoded = await decodeShortSharePayload(thirdEncoded);
+        expect(thirdDecoded.properties.questions).toHaveLength(1);
+        expect(thirdDecoded.properties.questions[0].type).toBe("matching");
+
+        // Clean up store
+        questions.set([]);
     });
 });

@@ -329,6 +329,9 @@ export const hidingZone = computed(
             };
         } else {
             const $loc = structuredClone(loc);
+            if ("questions" in $loc) {
+                delete ($loc as any).questions;
+            }
             $loc.properties.isHidingZone = true;
             $loc.properties.questions = q;
             return {

@@ -494,8 +494,9 @@ export const OptionDrawers = ({ className }: { className?: string }) => {
                     const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                     let shareUrl: string;
                     try {
+                        const currentZone = hidingZone.get();
                         const shortPayload = await encodeShortSharePayload(
-                            $hidingZone,
+                            currentZone,
                             pidStopModes.get(),
                             pidOverlayLayers.get(),
                         );

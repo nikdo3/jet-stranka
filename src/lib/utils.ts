@@ -337,7 +337,9 @@ export async function encodeShortSharePayload(
         payload.alternateLocations = zone.alternateLocations;
     }
 
-    const rawQuestions = zone.questions ?? zone.properties?.questions;
+    const rawQuestions = zone.properties?.isHidingZone
+        ? (zone.properties?.questions ?? zone.questions)
+        : (zone.questions ?? zone.properties?.questions);
     if (Array.isArray(rawQuestions) && rawQuestions.length > 0) {
         const compactedQuestions = rawQuestions.map((item: any) => {
             const q: any = {};
