@@ -16,6 +16,7 @@ import {
 import {
     VLTAVA_ISLANDS,
     VLTAVA_LINE,
+    buildPidOverlay,
     filterPidStationsByModes,
     getPidDistrictPolygon,
     getVltavaBankPolygon,
@@ -418,8 +419,8 @@ describe("PID Prague data & helpers", () => {
             // Prague 1 coordinates: lat 50.0875, lng 14.421
             const boundary = await findAdminBoundary(50.0875, 14.421, 9);
             expect(boundary).toBeDefined();
-            expect(boundary.properties?.name).toBe("Praha 1");
-            expect(boundary.properties?.admin_level).toBe("9");
+            expect(boundary!.properties?.name).toBe("Praha 1");
+            expect(boundary!.properties?.admin_level).toBe("9");
 
             // Letter 'P' admin zones in Prague (level 9)
             const pZones = await findAdminZonesInPrague(9, "P");
@@ -434,13 +435,96 @@ describe("PID Prague data & helpers", () => {
             // Karlín (cadastral admin_level 10) & Praha 8 (municipal district admin_level 9)
             const karlin = await findAdminBoundary(50.09303, 14.45176, 10);
             expect(karlin).toBeDefined();
-            expect(karlin.properties?.name).toBe("Karlín");
+            expect(karlin!.properties?.name).toBe("Karlín");
 
             const praha8 = await getPidDistrictPolygon(14.45176, 50.09303);
             expect(praha8).not.toBeNull();
             expect(praha8!.properties?.name).toBe("Praha 8");
 
             expect(overpassCallCount).toBe(0);
+        } finally {
+            globalThis.fetch = originalFetch;
+        }
+    });
+
+    it("builds overlay with districts, cadastral, and vltava layers", async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = async (input: any, init?: any) => {
+            const url = typeof input === "string" ? input : input.url;
+            if (url.includes("/pid/pid_admin_zones.geojson")) {
+                const data = JSON.parse(
+                    fs.readFileSync(
+                        path.join(pidDir, "pid_admin_zones.geojson"),
+                        "utf8",
+                    ),
+                );
+                return new Response(JSON.stringify(data), {
+                    status: 200,
+                    headers: { "Content-Type": "application/json" },
+                });
+            }
+            return originalFetch ? originalFetch(input, init) : new Response("{}", { status: 200 });
+        };
+
+        try {
+            const overlay = await buildPidOverlay([
+                "districts",
+                "cadastral",
+                "vltava",
+            ]);
+            expect(overlay.type).toBe("FeatureCollection");
+            expect(overlay.features.length).toBeGreaterThan(0);
+
+            // Districts (admin_level 9)
+            const districtFeatures = overlay.features.filter(
+                (f) => String(f.properties?.admin_level) === "9",
+            );
+            expect(districtFeatures.length).toBe(57);
+            for (const f of districtFeatures) {
+                expect(f.properties?.color).toBe("#475569");
+                expect(f.properties?.weight).toBe(2);
+                expect(f.properties?.dashArray).toBe("6,5");
+                expect(f.properties?.["fill-opacity"]).toBe(0.04);
+            }
+
+            // Cadastral (admin_level 10)
+            const cadastralFeatures = overlay.features.filter(
+                (f) => String(f.properties?.admin_level) === "10",
+            );
+            expect(cadastralFeatures.length).toBeGreaterThan(100);
+            for (const f of cadastralFeatures) {
+                expect(f.properties?.color).toBe("#7C3AED");
+                expect(f.properties?.weight).toBe(1.2);
+                expect(f.properties?.dashArray).toBe("2,4");
+                expect(f.properties?.["fill-opacity"]).toBe(0.02);
+            }
+
+            // Vltava features
+            const vltavaLine = overlay.features.find(
+                (f) => f.properties?.name === "Řeka Vltava",
+            );
+            expect(vltavaLine).toBeDefined();
+            expect(vltavaLine?.geometry.type).toBe("LineString");
+            expect(vltavaLine?.properties?.color).toBe("#0284C7");
+            expect(vltavaLine?.properties?.weight).toBe(2.5);
+            expect(vltavaLine?.properties?.["fill-opacity"]).toBe(0.18);
+
+            const kampa = overlay.features.find(
+                (f) => f.properties?.name === "Kampa",
+            );
+            expect(kampa).toBeDefined();
+            expect(kampa?.geometry.type).toBe("Polygon");
+            expect(kampa?.properties?.color).toBe("#0284C7");
+            expect(kampa?.properties?.weight).toBe(2.5);
+            expect(kampa?.properties?.["fill-opacity"]).toBe(0.18);
+
+            // Total count should match sum of components
+            expect(overlay.features.length).toBe(
+                districtFeatures.length +
+                    cadastralFeatures.length +
+                    1 +
+                    VLTAVA_ISLANDS.length,
+            );
         } finally {
             globalThis.fetch = originalFetch;
         }

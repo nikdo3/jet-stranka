@@ -24,8 +24,20 @@ import { buildPidOverlay, loadPidPraguePreset } from "@/maps/pid";
 const PID_LAYER_OPTIONS = [
     { id: "zones", label: "Tarifní pásma PID (P, 0, B)" },
     { id: "metro_tram", label: "Linky metra (A, B, C) a tramvají (1–26)" },
-    { id: "stops", label: "Zastávky PID (286 zastávek)" },
+    {
+        id: "stops",
+        label: "Zastávky PID (1 397 zastávek vč. busů a vlaků)",
+    },
     { id: "background", label: "Železnice (linky S) a autobusové koridory" },
+    {
+        id: "districts",
+        label: "Městské části Prahy (57 MČ / Praha 1–22)",
+    },
+    {
+        id: "cadastral",
+        label: "Katastrální území / čtvrti (Karlín, Žižkov…)",
+    },
+    { id: "vltava", label: "Řeka Vltava a vltavské ostrovy" },
 ] as const;
 
 const PHOTO_TASKS = [

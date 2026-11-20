@@ -599,12 +599,20 @@ export const Map = ({ className }: { className?: string }) => {
                 },
 
                 style(feature) {
+                    const props = feature?.properties;
                     return {
-                        color: feature?.properties?.stroke,
-                        weight: feature?.properties?.["stroke-width"],
-                        opacity: feature?.properties?.["stroke-opacity"],
-                        fillColor: feature?.properties?.fill,
-                        fillOpacity: feature?.properties?.["fill-opacity"],
+                        color: props?.color ?? props?.stroke,
+                        weight: props?.weight ?? props?.["stroke-width"],
+                        opacity: props?.opacity ?? props?.["stroke-opacity"],
+                        fillColor:
+                            props?.fillColor ??
+                            props?.fill ??
+                            props?.color ??
+                            props?.stroke,
+                        fillOpacity:
+                            props?.fillOpacity ?? props?.["fill-opacity"],
+                        dashArray: props?.dashArray,
+                        interactive: false,
                     };
                 },
             });

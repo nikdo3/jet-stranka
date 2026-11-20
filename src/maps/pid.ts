@@ -519,6 +519,54 @@ export async function buildPidOverlay(
         metro_tram: fetchPidMetroTramLines,
         background: fetchPidBackgroundLines,
         stops: fetchPidStopsGeoJSON,
+        districts: async () => {
+            const fc = await fetchPidAdminZones();
+            return {
+                type: "FeatureCollection",
+                features: fc.features
+                    .filter((f) => String(f.properties?.admin_level) === "9")
+                    .map((f) => ({
+                        ...f,
+                        properties: {
+                            ...f.properties,
+                            color: "#475569",
+                            weight: 2,
+                            dashArray: "6,5",
+                            "fill-opacity": 0.04,
+                        },
+                    })),
+            };
+        },
+        cadastral: async () => {
+            const fc = await fetchPidAdminZones();
+            return {
+                type: "FeatureCollection",
+                features: fc.features
+                    .filter((f) => String(f.properties?.admin_level) === "10")
+                    .map((f) => ({
+                        ...f,
+                        properties: {
+                            ...f.properties,
+                            color: "#7C3AED",
+                            weight: 1.2,
+                            dashArray: "2,4",
+                            "fill-opacity": 0.02,
+                        },
+                    })),
+            };
+        },
+        vltava: async () => ({
+            type: "FeatureCollection",
+            features: [VLTAVA_LINE, ...VLTAVA_ISLANDS].map((f) => ({
+                ...f,
+                properties: {
+                    ...f.properties,
+                    color: "#0284C7",
+                    weight: 2.5,
+                    "fill-opacity": 0.18,
+                },
+            })),
+        }),
     };
 
     const selected = layers.filter((l) => l in layerFetchers);
